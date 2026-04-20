@@ -1,0 +1,396 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pranata Pramudya | Portofolio</title>
+
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}?v=2.0"
+    />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@700&display=swap"
+      rel="stylesheet"
+    />
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+      integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+  </head>
+
+  <body>
+    <header>
+      <div class="nav-container">
+        <a href="#" class="logo">Portfolio</a>
+
+        <div class="hamburger" id="hamburger-btn">
+          <span class="bar"></span>
+          <span class="bar"></span>
+          <span class="bar"></span>
+        </div>
+
+        <ul class="nav-links" id="nav-links">
+          <li><a href="#about">Tentang</a></li>
+          <li><a href="#skills">Keahlian</a></li>
+          <li><a href="#projects">Proyek</a></li>
+          <li><a href="#contact">Kontak</a></li>
+          <li>
+            <a
+              href="https://drive.google.com/file/d/1NV6aterqCwoyd854N9UVgfRHCQ9zRI9v/view?usp=drive_link"
+              target="_blank"
+              class="btn-nav-cv"
+            >
+              Unduh CV <i class="fas fa-download"></i>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="hero-image">
+          <img
+            src="{{ url_for('static', filename='images/foto-profil.jpg') }}"
+            alt="Pranata Pramudya"
+          />
+        </div>
+
+        <div class="hero-text">
+          <h1>
+            Halo, Saya <span class="highlight">Pranata Pramudya, S.Kom</span>
+          </h1>
+
+          <div class="typewriter">
+            <p class="hero-subtitle">Fresh Graduate Teknik Informatika</p>
+          </div>
+
+          <p class="hero-description">
+            Lulusan Sarjana Komputer yang memiliki kemampuan adaptasi teknologi
+            tinggi, teliti dalam pengolahan data, dan disiplin. Siap berkarir di
+            sektor <strong>Perbankan & Administrasi</strong> dengan memanfaatkan
+            logika terstruktur untuk efisiensi pekerjaan.
+          </p>
+
+          <div class="hero-buttons">
+            <a href="#contact" class="btn-primary">
+              <i class="fas fa-envelope"></i> Hubungi Saya
+            </a>
+
+            <a
+              href="https://drive.google.com/file/d/1NV6aterqCwoyd854N9UVgfRHCQ9zRI9v/view?usp=drive_link"
+              target="_blank"
+              class="btn-outline"
+            >
+              <i class="fas fa-eye"></i> Lihat CV Online
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <section id="about" class="container">
+        <h2>Profil Singkat</h2>
+        <div
+          class="about-content"
+          style="text-align: center; max-width: 800px; margin: auto"
+        >
+          <p style="margin-bottom: 15px; font-size: 1.1rem; line-height: 1.8">
+            Sebagai lulusan <strong>Teknik Informatika (S.Kom)</strong>, saya
+            terlatih untuk berpikir logis, sistematis, dan detail dalam
+            memecahkan masalah. Latar belakang ini membentuk saya menjadi
+            individu yang
+            <strong>cepat beradaptasi dengan teknologi (Tech-Savvy)</strong>.
+          </p>
+          <p style="font-size: 1.1rem; line-height: 1.8">
+            Minat karir saya berfokus pada
+            <strong>Layanan Perbankan, Administrasi, dan Operasional</strong>.
+            Saya siap bekerja dengan teliti, cepat, dan efisien untuk mendukung
+            target perusahaan.
+          </p>
+        </div>
+      </section>
+
+      <section id="skills" class="container" style="background-color: #f8fafc">
+        <h2>Keahlian Profesional</h2>
+        <div class="skills-grid">
+          <div class="skill-card fade-in-element">
+            <h3>
+              <i
+                class="fas fa-file-invoice"
+                style="color: var(--secondary-color); margin-right: 10px"
+              ></i>
+              Administrasi
+            </h3>
+            <ul style="list-style: none; margin-top: 15px; line-height: 2">
+              <li>
+                <i class="fas fa-check-circle" style="color: green"></i>
+                Microsoft Office (Excel, Word, PPT)
+              </li>
+              <li>
+                <i class="fas fa-check-circle" style="color: green"></i>
+                Pengelolaan Data & Arsip
+              </li>
+              <li>
+                <i class="fas fa-check-circle" style="color: green"></i>
+                Korespondensi Bisnis
+              </li>
+            </ul>
+          </div>
+
+          <div class="skill-card fade-in-element">
+            <h3>
+              <i
+                class="fas fa-laptop-code"
+                style="color: var(--secondary-color); margin-right: 10px"
+              ></i>
+              IT & Digital
+            </h3>
+            <ul style="list-style: none; margin-top: 15px; line-height: 2">
+              <li>
+                <i class="fas fa-check-circle" style="color: green"></i> Logika
+                Pemrograman Dasar
+              </li>
+              <li>
+                <i class="fas fa-check-circle" style="color: green"></i>
+                Troubleshooting Hardware/Software
+              </li>
+              <li>
+                <i class="fas fa-check-circle" style="color: green"></i>
+                Adaptasi Software Baru
+              </li>
+            </ul>
+          </div>
+
+          <div class="skill-card fade-in-element">
+            <h3>
+              <i
+                class="fas fa-users"
+                style="color: var(--secondary-color); margin-right: 10px"
+              ></i>
+              Soft Skills
+            </h3>
+            <ul style="list-style: none; margin-top: 15px; line-height: 2">
+              <li>
+                <i class="fas fa-check-circle" style="color: green"></i>
+                Komunikasi Efektif
+              </li>
+              <li>
+                <i class="fas fa-check-circle" style="color: green"></i>
+                Manajemen Waktu
+              </li>
+              <li>
+                <i class="fas fa-check-circle" style="color: green"></i>
+                Kerjasama Tim (Teamwork)
+              </li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section id="projects" class="container">
+        <h2>Proyek Portofolio</h2>
+        <div class="projects-grid">
+          <div class="project-card fade-in-element">
+            <h3>Aplikasi Kalkulator</h3>
+            <p style="margin: 10px 0; color: #666">
+              Aplikasi web kalkulator fungsional menggunakan JavaScript murni
+              untuk melatih logika.
+            </p>
+            <a
+              href="{{ url_for('static', filename='proyek_kalkulator/index.html') }}"
+              target="_blank"
+              class="btn-primary"
+              style="padding: 8px 20px; font-size: 0.9rem"
+              >Lihat Proyek</a
+            >
+          </div>
+
+          <div class="project-card fade-in-element">
+            <h3>UI/UX Rekam Medis</h3>
+            <p style="margin: 10px 0; color: #666">
+              Desain prototipe aplikasi klinik menggunakan metode User Centered
+              Design.
+            </p>
+            <a
+              href="https://www.figma.com/proto/WvSVFBmHlPevd3STqV8RAx/Klinik-UI?node-id=1-2&t=Mh7nSVuzJSExEE5j-1"
+              target="_blank"
+              class="btn-primary"
+              style="padding: 8px 20px; font-size: 0.9rem"
+              >Lihat Figma</a
+            >
+          </div>
+
+          <div class="project-card fade-in-element">
+            <h3>Landing Page Gumroad</h3>
+            <p style="margin: 10px 0; color: #666">
+              Desain halaman penawaran produk yang responsif dengan Next.js,
+              Prisma, dan NeonDB.
+            </p>
+            <a
+              href="{{ url_for('static', filename='proyek_landing_page/index.html') }}"
+              target="_blank"
+              class="btn-primary"
+              style="padding: 8px 20px; font-size: 0.9rem"
+              >Lihat Web</a
+            >
+          </div>
+
+          <div class="project-card fade-in-element">
+            <h3>Aplikasi Cuaca</h3>
+            <p style="margin: 10px 0; color: #666">
+              Aplikasi web dinamis yang mengambil data cuaca live dari API
+              OpenWeatherMap.
+            </p>
+            <a
+              href="{{ url_for('static', filename='proyek_cuaca/index.html') }}"
+              target="_blank"
+              class="btn-primary"
+              style="padding: 8px 20px; font-size: 0.9rem"
+              >Lihat Proyek</a
+            >
+          </div>
+        </div>
+      </section>
+
+      <section id="contact" class="container" style="background-color: white">
+        <h2>Hubungi Saya</h2>
+
+        <div
+          style="
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            margin-top: 30px;
+          "
+        >
+          <div
+            class="contact-card fade-in-element"
+            style="
+              background: #f8fafc;
+              padding: 30px;
+              border-radius: 15px;
+              border-left: 5px solid var(--primary-color);
+            "
+          >
+            <h3>Mari Terhubung</h3>
+            <p style="margin-bottom: 20px">
+              Saya siap berdiskusi mengenai peluang karir di perusahaan
+              Bapak/Ibu.
+            </p>
+
+            <div style="margin-bottom: 15px">
+              <i
+                class="fas fa-envelope"
+                style="color: var(--primary-color)"
+              ></i>
+              <a
+                href="mailto:pranatapramudya39@gmail.com"
+                style="
+                  text-decoration: none;
+                  color: #333;
+                  margin-left: 10px;
+                  font-weight: 600;
+                "
+              >
+                pranatapramudya39@gmail.com
+              </a>
+            </div>
+
+            <div style="margin-bottom: 15px">
+              <i class="fab fa-linkedin" style="color: #0077b5"></i>
+              <a
+                href="https://www.linkedin.com/in/pranatapramudya-2a4427292/"
+                target="_blank"
+                style="
+                  text-decoration: none;
+                  color: #333;
+                  margin-left: 10px;
+                  font-weight: 600;
+                "
+              >
+                LinkedIn: Pranata Pramudya
+              </a>
+            </div>
+
+            <div style="margin-bottom: 15px">
+              <i class="fab fa-youtube" style="color: #ff0000"></i>
+              <a
+                href="https://www.youtube.com/channel/UC3jhnx_Bv4S8TJQtnvTkXjw"
+                target="_blank"
+                style="
+                  text-decoration: none;
+                  color: #333;
+                  margin-left: 10px;
+                  font-weight: 600;
+                "
+              >
+                YouTube: Pranajaya Affiliate
+              </a>
+            </div>
+
+            <div>
+              <i
+                class="fas fa-circle"
+                style="color: green; font-size: 0.8rem"
+              ></i>
+              <span style="margin-left: 10px"
+                >Siap Bekerja Segera (Available)</span
+              >
+            </div>
+          </div>
+
+          <form id="contact-form" class="contact-form fade-in-element">
+            <div style="margin-bottom: 15px">
+              <input
+                type="text"
+                id="name"
+                name="name"
+                placeholder="Nama Lengkap"
+                required
+              />
+            </div>
+            <div style="margin-bottom: 15px">
+              <input
+                type="email"
+                id="email"
+                name="email"
+                placeholder="Alamat Email"
+                required
+              />
+            </div>
+            <div style="margin-bottom: 15px">
+              <textarea
+                id="message"
+                name="message"
+                rows="4"
+                placeholder="Pesan Anda..."
+                required
+              ></textarea>
+            </div>
+            <button
+              type="submit"
+              class="btn-primary"
+              style="width: 100%; border: none; cursor: pointer"
+            >
+              Kirim Pesan <i class="fas fa-paper-plane"></i>
+            </button>
+          </form>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <p>&copy; 2025 Pranata Pramudya. Professional Portfolio.</p>
+    </footer>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+  </body>
+</html>

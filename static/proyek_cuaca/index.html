@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aplikasi Cuaca</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="weather-container">
+        <div class="search-box">
+            <input type="text" id="city-input" placeholder="Masukkan nama kota...">
+            <button id="search-btn">Cari</button>
+        </div>
+        <div id="weather-result" class="weather-result hidden">
+            <h2 id="city-name"></h2>
+            <div class="weather-main">
+                <img id="weather-icon" src="" alt="Weather Icon">
+                <p id="temperature"></p>
+            </div>
+            <p id="description"></p>
+        </div>
+        <div id="error-message" class="error-message hidden">
+            Kota tidak ditemukan. Silakan coba lagi.
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+
+</html>
