@@ -1,3 +1,8 @@
+import os
+
+# Tarik dari 'brankas' Vercel, bukan diketik manual kuncinya
+api_key = os.environ.get('OPENWEATHER_API_KEY')
+
 # Impor library yang kita butuhkan, tambahkan sqlite3
 import sqlite3
 from flask import Flask, render_template, request, jsonify
