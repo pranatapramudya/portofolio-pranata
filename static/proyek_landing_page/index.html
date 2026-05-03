@@ -21,7 +21,12 @@
     <header>
       <nav class="container">
         <a href="#" class="logo">Porto.Dev</a>
-        <ul>
+
+        <div class="menu-toggle" id="mobile-menu">
+          <i class="fas fa-bars"></i>
+        </div>
+
+        <ul id="nav-menu">
           <li><a href="#features">Fitur Project</a></li>
           <li><a href="#">Tech Stack</a></li>
           <li>
@@ -86,5 +91,23 @@
     <footer>
       <p>&copy; 2026 Developed with ❤️ in Sumedang. Powered by LumeStack.</p>
     </footer>
+
+    <script>
+      const mobileMenu = document.getElementById("mobile-menu");
+      const navMenu = document.getElementById("nav-menu");
+
+      mobileMenu.addEventListener("click", () => {
+        navMenu.classList.toggle("active");
+        // Ubah ikon dari hamburger (bars) jadi silang (times) saat dibuka
+        const icon = mobileMenu.querySelector("i");
+        if (navMenu.classList.contains("active")) {
+          icon.classList.remove("fa-bars");
+          icon.classList.add("fa-times");
+        } else {
+          icon.classList.remove("fa-times");
+          icon.classList.add("fa-bars");
+        }
+      });
+    </script>
   </body>
 </html>
