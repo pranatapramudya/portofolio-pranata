@@ -1,4 +1,5 @@
 import Image from "next/image";
+import ScrollReveal from "@/components/ScrollReveal";
 
 // Icons
 const Mail = (props: any) => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>;
@@ -95,7 +96,7 @@ export default function Home() {
 
       {/* Skills Section */}
       <section id="skills" className="py-24 bg-slate-900/50 border-y border-slate-800 relative z-10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <ScrollReveal className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-slate-100 mb-4">Keahlian Profesional</h2>
             <div className="w-20 h-1 bg-gradient-to-r from-cyan-500 to-blue-500 mx-auto rounded-full"></div>
@@ -156,12 +157,12 @@ export default function Home() {
               </ul>
             </div>
           </div>
-        </div>
+        </ScrollReveal>
       </section>
 
       {/* Projects Section */}
       <section id="projects" className="py-24 relative z-10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <ScrollReveal className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-slate-100 mb-4">Proyek Portofolio</h2>
             <div className="w-20 h-1 bg-gradient-to-r from-blue-500 to-indigo-500 mx-auto rounded-full"></div>
@@ -281,12 +282,12 @@ export default function Home() {
             </div>
 
           </div>
-        </div>
+        </ScrollReveal>
       </section>
 
       {/* Contact Section */}
       <section id="contact" className="py-24 bg-slate-900/80 border-t border-slate-800 relative z-10">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <ScrollReveal className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl md:text-4xl font-bold text-slate-100 mb-6">Mari Terhubung</h2>
           <p className="text-lg text-slate-400 mb-10 max-w-2xl mx-auto">
             Saya terbuka untuk diskusi mengenai peluang karir di perusahaan Bapak/Ibu. Silakan hubungi saya melalui email atau LinkedIn.
@@ -302,7 +303,7 @@ export default function Home() {
               LinkedIn Profile
             </a>
           </div>
-        </div>
+        </ScrollReveal>
       </section>
 
       {/* Footer */}

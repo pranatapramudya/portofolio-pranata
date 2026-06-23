@@ -52,18 +52,19 @@ export default function Sidebar() {
         </div>
 
         {/* Navigation */}
-        <nav className="flex-1 px-4 py-8 space-y-2">
+        <nav className="flex-1 px-4 py-8 space-y-2" style={{ perspective: '800px' }}>
           {navLinks.map((link) => (
             <a
               key={link.name}
               href={link.href}
               onClick={closeSidebar}
-              className="flex items-center gap-4 px-4 py-3 rounded-xl text-slate-300 hover:text-cyan-400 hover:bg-slate-800/50 transition-all group"
+              className="flex items-center gap-4 px-4 py-3 rounded-xl text-slate-300 hover:text-cyan-400 hover:bg-slate-800/80 transition-all duration-300 group hover:shadow-lg hover:shadow-cyan-500/10 border border-transparent hover:border-cyan-500/20"
+              style={{ transformStyle: 'preserve-3d' }}
             >
-              <div className="group-hover:scale-110 transition-transform">
+              <div className="group-hover:scale-110 group-hover:rotate-12 transition-transform duration-300">
                 {link.icon}
               </div>
-              <span className="font-medium">{link.name}</span>
+              <span className="font-medium group-hover:translate-x-1 transition-transform duration-300">{link.name}</span>
             </a>
           ))}
         </nav>
