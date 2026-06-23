@@ -1,69 +1,36 @@
-# My Professional Portfolio 🚀
+This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-Website portofolio pribadi yang dibangun dengan Flask dan dideploy ke Vercel. Digunakan untuk menampilkan proyek-proyek IT, layanan SaaS, dan keahlian teknis lainnya.
+## Getting Started
 
-## 🛠️ Stack Teknologi
+First, run the development server:
 
-- **Backend:** Python (Flask)
-- **Frontend:** HTML5, CSS3, JavaScript (Vanilla)
-- **Form Handling:** [Formspree](https://formspree.io/) (Kirim pesan langsung ke Gmail)
-- **Deployment:** [Vercel](https://vercel.com/)
-- **Version Control:** GitHub
-
-## 📂 Struktur Folder
-
-```text
-pranata_portfolio/
-├── static/              # File aset (CSS, JS, Gambar)
-│   ├── css/
-│   ├── js/
-│   └── images/
-├── templates/           # File HTML (Jinja2)
-├── app.py               # Entry point aplikasi Flask
-├── requirements.txt     # Daftar library Python (Dependency)
-├── vercel.json          # Konfigurasi deployment Vercel
-└── README.md            # Dokumentasi proyek
-🚀 Cara Menambah Proyek Baru
-Jika lu mau tambah proyek (seperti SaaS Boilerplate atau sistem baru):
-
-Buka templates/index.html:
-
-Cari bagian <section id="projects">.
-
-Copy-paste blok div proyek yang sudah ada.
-
-Ganti judul, deskripsi, dan gambar proyeknya.
-
-Update Gambar:
-
-Simpan gambar/screenshot proyek baru di folder static/images/.
-
-Update tag <img> di HTML agar mengarah ke file baru tersebut.
-
-Deploy Ulang:
-Simpan perubahan di VS Code, lalu jalankan perintah di terminal:
-
-Bash
-git add .
-git commit -m "Update: Menambahkan proyek [Nama Proyek]"
-git push
-Vercel akan otomatis melakukan update website dalam hitungan detik.
-
-🔒 Keamanan & API Key
-Environment Variables: API Key (seperti OpenWeatherMap) TIDAK BOLEH ditulis langsung di kode.
-
-Gunakan os.environ.get('NAMA_VARIABLE') di app.py.
-
-Tambahkan key/value tersebut di menu Settings > Environment Variables di Dashboard Vercel.
-
-📧 Kontak Form
-Web ini menggunakan Formspree. Jika ingin mengganti tujuan email:
-
-Login ke Formspree.
-
-Buat form baru atau ambil ID form yang ada.
-
-Update URL di static/js/script.js pada bagian fungsi fetch.
-
-Created by Pranata Pramudya - S.Kom
+```bash
+npm run dev
+# or
+yarn dev
+# or
+pnpm dev
+# or
+bun dev
 ```
+
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+
+You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+
+This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+
+## Learn More
+
+To learn more about Next.js, take a look at the following resources:
+
+- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
+- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+
+You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+
+## Deploy on Vercel
+
+The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+
+Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
