@@ -23,17 +23,22 @@ export default function Home() {
         <div className="relative z-10 max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-12 text-center md:text-left">
           
           {/* Photo Section */}
-          <div className="order-first md:order-last w-64 h-64 md:w-80 md:h-80 lg:w-96 lg:h-96 relative flex-shrink-0">
+          <div className="order-first md:order-last w-64 h-64 md:w-80 md:h-80 lg:w-96 lg:h-96 relative flex-shrink-0" style={{ perspective: '1000px' }}>
             {/* Background Glow */}
-            <div className="absolute inset-0 bg-gradient-to-tr from-cyan-500 to-blue-600 rounded-3xl blur-2xl opacity-40 animate-pulse"></div>
+            <div className="absolute inset-0 bg-gradient-to-tr from-cyan-500 to-blue-600 rounded-3xl blur-2xl opacity-60 animate-pulse"></div>
             {/* Image Container with Float Animation */}
-            <div className="relative w-full h-full rounded-3xl overflow-hidden border-2 border-slate-700/50 shadow-[0_0_40px_rgba(34,211,238,0.2)] animate-float transform hover:scale-105 transition-transform duration-500 bg-slate-800">
+            <div 
+              className="relative w-full h-full rounded-3xl overflow-hidden border-2 border-slate-600/80 shadow-[0_20px_50px_rgba(34,211,238,0.3)] animate-float transition-all duration-500 bg-slate-800 z-10"
+              style={{ transformStyle: 'preserve-3d' }}
+            >
               <Image 
                 src="/images/foto-profil.jpg" 
                 alt="Pranata Pramudya" 
                 fill 
                 className="object-cover object-top"
                 priority
+                quality={100}
+                unoptimized
               />
             </div>
           </div>
