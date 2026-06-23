@@ -36,9 +36,9 @@ export default function Home() {
                 src="/images/foto-profil.jpg" 
                 alt="Pranata Pramudya" 
                 fill 
+                sizes="(max-width: 768px) 100vw, 50vw"
                 className="object-cover object-top"
                 priority
-                quality={100}
                 unoptimized
               />
             </div>
