@@ -1,6 +1,12 @@
-import Image from "next/image";
-import Link from "next/link";
-import { Mail, Linkedin, FileText, ChevronRight, Terminal, Server, Briefcase, Code } from "lucide-react";
+// Icons
+const Mail = (props: any) => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>;
+const Linkedin = (props: any) => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/></svg>;
+const FileText = (props: any) => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg>;
+const ChevronRight = (props: any) => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><path d="m9 18 6-6-6-6"/></svg>;
+const Terminal = (props: any) => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><polyline points="4 17 10 11 4 5"/><line x1="12" x2="20" y1="19" y2="19"/></svg>;
+const Server = (props: any) => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><rect width="20" height="8" x="2" y="2" rx="2" ry="2"/><rect width="20" height="8" x="2" y="14" rx="2" ry="2"/><line x1="6" x2="6.01" y1="6" y2="6"/><line x1="6" x2="6.01" y1="18" y2="18"/></svg>;
+const Briefcase = (props: any) => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><rect width="20" height="14" x="2" y="7" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>;
+const Code = (props: any) => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>;
 
 export default function Home() {
   return (
@@ -12,48 +18,70 @@ export default function Home() {
           <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-600/20 rounded-full blur-3xl"></div>
         </div>
         
-        <div className="relative z-10 max-w-5xl mx-auto text-center">
-          <div className="inline-block p-1 rounded-full bg-slate-800/50 border border-slate-700/50 mb-6 backdrop-blur-md">
-            <div className="px-4 py-1.5 rounded-full text-sm font-medium text-cyan-400 bg-slate-900/50 flex items-center gap-2">
-              <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-cyan-500"></span>
-              </span>
-              Available for Work
+        <div className="relative z-10 max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-12 text-center md:text-left">
+          
+          {/* Photo Section */}
+          <div className="order-first md:order-last w-64 h-64 md:w-80 md:h-80 lg:w-96 lg:h-96 relative flex-shrink-0">
+            {/* Background Glow */}
+            <div className="absolute inset-0 bg-gradient-to-tr from-cyan-500 to-blue-600 rounded-3xl blur-2xl opacity-40 animate-pulse"></div>
+            {/* Image Container with Float Animation */}
+            <div className="relative w-full h-full rounded-3xl overflow-hidden border-2 border-slate-700/50 shadow-[0_0_40px_rgba(34,211,238,0.2)] animate-float transform hover:scale-105 transition-transform duration-500 bg-slate-800">
+              <Image 
+                src="/images/foto-profil.jpg" 
+                alt="Pranata Pramudya" 
+                fill 
+                className="object-cover object-top"
+                priority
+              />
             </div>
           </div>
-          
-          <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight mb-6 text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-500 to-indigo-600">
-            Pranata Pramudya
-          </h1>
-          
-          <p className="text-xl md:text-2xl font-medium text-slate-300 mb-8 max-w-2xl mx-auto">
-            S.Kom | Tech-Savvy Professional
-          </p>
-          
-          <p className="text-lg text-slate-400 mb-10 max-w-3xl mx-auto leading-relaxed">
-            Lulusan Sarjana Komputer yang memiliki kemampuan adaptasi teknologi tinggi, 
-            teliti dalam pengolahan data, dan disiplin. Siap berkarir dengan memanfaatkan 
-            logika terstruktur untuk efisiensi pekerjaan.
-          </p>
-          
-          <div className="flex flex-wrap items-center justify-center gap-4">
-            <a 
-              href="#contact" 
-              className="px-8 py-3.5 rounded-full font-semibold text-slate-950 bg-cyan-400 hover:bg-cyan-300 transition-all shadow-[0_0_20px_rgba(34,211,238,0.4)] flex items-center gap-2 group"
-            >
-              <Mail className="w-5 h-5" />
-              Hubungi Saya
-            </a>
-            <a 
-              href="https://drive.google.com/file/d/1Z5A6gZFijY_xlFF7TZdeYFg7EdPrCFkg/view?usp=sharing" 
-              target="_blank"
-              rel="noreferrer"
-              className="px-8 py-3.5 rounded-full font-semibold text-slate-200 bg-slate-800 border border-slate-700 hover:bg-slate-700 transition-all flex items-center gap-2"
-            >
-              <FileText className="w-5 h-5" />
-              Lihat CV
-            </a>
+
+          {/* Text Content */}
+          <div className="flex-1">
+            <div className="inline-block p-1 rounded-full bg-slate-800/50 border border-slate-700/50 mb-6 backdrop-blur-md">
+              <div className="px-4 py-1.5 rounded-full text-sm font-medium text-cyan-400 bg-slate-900/50 flex items-center gap-2">
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-cyan-500"></span>
+                </span>
+                Available for Work
+              </div>
+            </div>
+            
+            <h1 className="text-5xl md:text-7xl lg:text-8xl font-extrabold tracking-tight mb-6 text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-500 to-indigo-600">
+              Pranata
+              <br />
+              Pramudya
+            </h1>
+            
+            <p className="text-xl md:text-2xl font-medium text-slate-300 mb-6">
+              S.Kom | Tech-Savvy Professional
+            </p>
+            
+            <p className="text-lg text-slate-400 mb-10 max-w-xl leading-relaxed">
+              Lulusan Sarjana Komputer yang memiliki kemampuan adaptasi teknologi tinggi, 
+              teliti dalam pengolahan data, dan disiplin. Siap berkarir dengan memanfaatkan 
+              logika terstruktur untuk efisiensi pekerjaan.
+            </p>
+            
+            <div className="flex flex-wrap items-center justify-center md:justify-start gap-4">
+              <a 
+                href="#contact" 
+                className="px-8 py-3.5 rounded-full font-semibold text-slate-950 bg-cyan-400 hover:bg-cyan-300 transition-all shadow-[0_0_20px_rgba(34,211,238,0.4)] flex items-center gap-2 group"
+              >
+                <Mail className="w-5 h-5" />
+                Hubungi Saya
+              </a>
+              <a 
+                href="https://drive.google.com/file/d/1Z5A6gZFijY_xlFF7TZdeYFg7EdPrCFkg/view?usp=sharing" 
+                target="_blank"
+                rel="noreferrer"
+                className="px-8 py-3.5 rounded-full font-semibold text-slate-200 bg-slate-800 border border-slate-700 hover:bg-slate-700 transition-all flex items-center gap-2"
+              >
+                <FileText className="w-5 h-5" />
+                Lihat CV
+              </a>
+            </div>
           </div>
         </div>
       </section>
