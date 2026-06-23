@@ -71,7 +71,7 @@ export default function Sidebar() {
         {/* Footer Area */}
         <div className="p-6 border-t border-slate-800 text-center">
           <p className="text-xs text-slate-500">
-            &copy; {new Date().getFullYear()} Pranata Pramudya.
+            &copy; 2025 Pranata Pramudya.
           </p>
         </div>
       </aside>

@@ -14,7 +14,7 @@ export default function Home() {
   return (
     <main className="flex-1 overflow-hidden">
       {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center justify-center pt-20 pb-16 px-4 sm:px-6 lg:px-8">
+      <section id="home" className="relative min-h-screen flex items-center justify-center pt-20 pb-16 px-4 sm:px-6 lg:px-8">
         <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
           <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-cyan-600/20 rounded-full blur-3xl"></div>
           <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-600/20 rounded-full blur-3xl"></div>
@@ -162,100 +162,116 @@ export default function Home() {
             <div className="w-20 h-1 bg-gradient-to-r from-blue-500 to-indigo-500 mx-auto rounded-full"></div>
           </div>
           
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             {/* Project 1 */}
-            <div className="group relative overflow-hidden rounded-2xl bg-slate-800/50 border border-slate-700 p-6 hover:border-cyan-500/50 transition-all flex flex-col h-full">
+            <div className="group relative overflow-hidden rounded-2xl bg-slate-800/50 border border-slate-700 p-4 sm:p-6 hover:border-cyan-500/50 transition-all flex flex-col h-full">
               <div className="flex-1">
-                <div className="w-12 h-12 bg-cyan-500/10 rounded-lg flex items-center justify-center mb-4 text-cyan-400 group-hover:scale-110 transition-transform">
-                  <Code className="w-6 h-6" />
+                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-cyan-500/10 rounded-lg flex items-center justify-center mb-3 sm:mb-4 text-cyan-400 group-hover:scale-110 transition-transform">
+                  <Code className="w-5 h-5 sm:w-6 sm:h-6" />
                 </div>
-                <h3 className="text-xl font-bold text-slate-200 mb-2">Aplikasi Kalkulator</h3>
-                <p className="text-slate-400 text-sm leading-relaxed mb-6">
+                <h3 className="text-lg sm:text-xl font-bold text-slate-200 mb-2">Aplikasi Kalkulator</h3>
+                <p className="text-slate-400 text-xs sm:text-sm leading-relaxed mb-4 sm:mb-6">
                   Aplikasi web kalkulator fungsional menggunakan JavaScript murni untuk melatih logika.
                 </p>
               </div>
-              <a href="/proyek_kalkulator/index.html" target="_blank" className="text-cyan-400 font-medium text-sm flex items-center gap-1 hover:gap-2 transition-all">
-                Lihat Proyek <ChevronRight className="w-4 h-4" />
+              <a href="/proyek_kalkulator/index.html" target="_blank" className="text-cyan-400 font-medium text-xs sm:text-sm flex items-center gap-1 hover:gap-2 transition-all">
+                Lihat Proyek <ChevronRight className="w-3 h-3 sm:w-4 sm:h-4" />
               </a>
             </div>
 
             {/* Project 2 */}
-            <div className="group relative overflow-hidden rounded-2xl bg-slate-800/50 border border-slate-700 p-6 hover:border-blue-500/50 transition-all flex flex-col h-full">
+            <div className="group relative overflow-hidden rounded-2xl bg-slate-800/50 border border-slate-700 p-4 sm:p-6 hover:border-blue-500/50 transition-all flex flex-col h-full">
               <div className="flex-1">
-                <div className="w-12 h-12 bg-blue-500/10 rounded-lg flex items-center justify-center mb-4 text-blue-400 group-hover:scale-110 transition-transform">
-                  <Code className="w-6 h-6" />
+                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-blue-500/10 rounded-lg flex items-center justify-center mb-3 sm:mb-4 text-blue-400 group-hover:scale-110 transition-transform">
+                  <Code className="w-5 h-5 sm:w-6 sm:h-6" />
                 </div>
-                <h3 className="text-xl font-bold text-slate-200 mb-2">UI/UX Rekam Medis</h3>
-                <p className="text-slate-400 text-sm leading-relaxed mb-6">
+                <h3 className="text-lg sm:text-xl font-bold text-slate-200 mb-2">UI/UX Rekam Medis</h3>
+                <p className="text-slate-400 text-xs sm:text-sm leading-relaxed mb-4 sm:mb-6">
                   Desain prototipe aplikasi klinik menggunakan metode User Centered Design di Figma.
                 </p>
               </div>
-              <a href="https://www.figma.com/proto/WvSVFBmHlPevd3STqV8RAx/Klinik-UI?node-id=1-2&t=Mh7nSVuzJSExEE5j-1" target="_blank" className="text-blue-400 font-medium text-sm flex items-center gap-1 hover:gap-2 transition-all">
-                Lihat Figma <ChevronRight className="w-4 h-4" />
+              <a href="https://www.figma.com/proto/WvSVFBmHlPevd3STqV8RAx/Klinik-UI?node-id=1-2&t=Mh7nSVuzJSExEE5j-1" target="_blank" className="text-blue-400 font-medium text-xs sm:text-sm flex items-center gap-1 hover:gap-2 transition-all">
+                Lihat Figma <ChevronRight className="w-3 h-3 sm:w-4 sm:h-4" />
               </a>
             </div>
 
             {/* Project 3 */}
-            <div className="group relative overflow-hidden rounded-2xl bg-slate-800/50 border border-slate-700 p-6 hover:border-indigo-500/50 transition-all flex flex-col h-full">
+            <div className="group relative overflow-hidden rounded-2xl bg-slate-800/50 border border-slate-700 p-4 sm:p-6 hover:border-indigo-500/50 transition-all flex flex-col h-full">
               <div className="flex-1">
-                <div className="w-12 h-12 bg-indigo-500/10 rounded-lg flex items-center justify-center mb-4 text-indigo-400 group-hover:scale-110 transition-transform">
-                  <Code className="w-6 h-6" />
+                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-indigo-500/10 rounded-lg flex items-center justify-center mb-3 sm:mb-4 text-indigo-400 group-hover:scale-110 transition-transform">
+                  <Code className="w-5 h-5 sm:w-6 sm:h-6" />
                 </div>
-                <h3 className="text-xl font-bold text-slate-200 mb-2">Premium SaaS Boilerplate</h3>
-                <p className="text-slate-400 text-sm leading-relaxed mb-6">
+                <h3 className="text-lg sm:text-xl font-bold text-slate-200 mb-2">Premium SaaS Boilerplate</h3>
+                <p className="text-slate-400 text-xs sm:text-sm leading-relaxed mb-4 sm:mb-6">
                   Starter kit Next.js dengan Prisma, TypeScript, dan Autentikasi untuk meluncurkan SaaS dalam hitungan jam.
                 </p>
               </div>
-              <a href="/proyek_landing_page/index.html" target="_blank" className="text-indigo-400 font-medium text-sm flex items-center gap-1 hover:gap-2 transition-all">
-                Lihat Web <ChevronRight className="w-4 h-4" />
+              <a href="/proyek_landing_page/index.html" target="_blank" className="text-indigo-400 font-medium text-xs sm:text-sm flex items-center gap-1 hover:gap-2 transition-all">
+                Lihat Web <ChevronRight className="w-3 h-3 sm:w-4 sm:h-4" />
               </a>
             </div>
 
             {/* Project 4 */}
-            <div className="group relative overflow-hidden rounded-2xl bg-slate-800/50 border border-slate-700 p-6 hover:border-teal-500/50 transition-all flex flex-col h-full">
+            <div className="group relative overflow-hidden rounded-2xl bg-slate-800/50 border border-slate-700 p-4 sm:p-6 hover:border-teal-500/50 transition-all flex flex-col h-full">
               <div className="flex-1">
-                <div className="w-12 h-12 bg-teal-500/10 rounded-lg flex items-center justify-center mb-4 text-teal-400 group-hover:scale-110 transition-transform">
-                  <Code className="w-6 h-6" />
+                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-teal-500/10 rounded-lg flex items-center justify-center mb-3 sm:mb-4 text-teal-400 group-hover:scale-110 transition-transform">
+                  <Code className="w-5 h-5 sm:w-6 sm:h-6" />
                 </div>
-                <h3 className="text-xl font-bold text-slate-200 mb-2">Aplikasi Cuaca</h3>
-                <p className="text-slate-400 text-sm leading-relaxed mb-6">
+                <h3 className="text-lg sm:text-xl font-bold text-slate-200 mb-2">Aplikasi Cuaca</h3>
+                <p className="text-slate-400 text-xs sm:text-sm leading-relaxed mb-4 sm:mb-6">
                   Aplikasi web dinamis yang mengambil data cuaca live dari API OpenWeatherMap.
                 </p>
               </div>
-              <a href="/proyek_cuaca/index.html" target="_blank" className="text-teal-400 font-medium text-sm flex items-center gap-1 hover:gap-2 transition-all">
-                Lihat Proyek <ChevronRight className="w-4 h-4" />
+              <a href="/proyek_cuaca/index.html" target="_blank" className="text-teal-400 font-medium text-xs sm:text-sm flex items-center gap-1 hover:gap-2 transition-all">
+                Lihat Proyek <ChevronRight className="w-3 h-3 sm:w-4 sm:h-4" />
               </a>
             </div>
 
             {/* Project 5 */}
-            <div className="group relative overflow-hidden rounded-2xl bg-slate-800/50 border border-slate-700 p-6 hover:border-emerald-500/50 transition-all flex flex-col h-full">
+            <div className="group relative overflow-hidden rounded-2xl bg-slate-800/50 border border-slate-700 p-4 sm:p-6 hover:border-emerald-500/50 transition-all flex flex-col h-full">
               <div className="flex-1">
-                <div className="w-12 h-12 bg-emerald-500/10 rounded-lg flex items-center justify-center mb-4 text-emerald-400 group-hover:scale-110 transition-transform">
-                  <Code className="w-6 h-6" />
+                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-emerald-500/10 rounded-lg flex items-center justify-center mb-3 sm:mb-4 text-emerald-400 group-hover:scale-110 transition-transform">
+                  <Code className="w-5 h-5 sm:w-6 sm:h-6" />
                 </div>
-                <h3 className="text-xl font-bold text-slate-200 mb-2">Whale Predator Tracker</h3>
-                <p className="text-slate-400 text-sm leading-relaxed mb-6">
+                <h3 className="text-lg sm:text-xl font-bold text-slate-200 mb-2">Whale Predator Tracker</h3>
+                <p className="text-slate-400 text-xs sm:text-sm leading-relaxed mb-4 sm:mb-6">
                   Aplikasi pemantauan aset finansial real-time yang terintegrasi dengan Coinglass API.
                 </p>
               </div>
-              <a href="https://predator-tracker.vercel.app/" target="_blank" className="text-emerald-400 font-medium text-sm flex items-center gap-1 hover:gap-2 transition-all">
-                Lihat Tracker <ChevronRight className="w-4 h-4" />
+              <a href="https://predator-tracker.vercel.app/" target="_blank" className="text-emerald-400 font-medium text-xs sm:text-sm flex items-center gap-1 hover:gap-2 transition-all">
+                Lihat Tracker <ChevronRight className="w-3 h-3 sm:w-4 sm:h-4" />
               </a>
             </div>
 
             {/* Project 6 */}
-            <div className="group relative overflow-hidden rounded-2xl bg-slate-800/50 border border-slate-700 p-6 hover:border-pink-500/50 transition-all flex flex-col h-full">
+            <div className="group relative overflow-hidden rounded-2xl bg-slate-800/50 border border-slate-700 p-4 sm:p-6 hover:border-pink-500/50 transition-all flex flex-col h-full">
               <div className="flex-1">
-                <div className="w-12 h-12 bg-pink-500/10 rounded-lg flex items-center justify-center mb-4 text-pink-400 group-hover:scale-110 transition-transform">
-                  <Code className="w-6 h-6" />
+                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-pink-500/10 rounded-lg flex items-center justify-center mb-3 sm:mb-4 text-pink-400 group-hover:scale-110 transition-transform">
+                  <Code className="w-5 h-5 sm:w-6 sm:h-6" />
                 </div>
-                <h3 className="text-xl font-bold text-slate-200 mb-2">KKF Label</h3>
-                <p className="text-slate-400 text-sm leading-relaxed mb-6">
+                <h3 className="text-lg sm:text-xl font-bold text-slate-200 mb-2">KKF Label</h3>
+                <p className="text-slate-400 text-xs sm:text-sm leading-relaxed mb-4 sm:mb-6">
                   Aplikasi web e-commerce butik fashion wanita modern dengan desain minimalis elegan.
                 </p>
               </div>
-              <a href="https://kkf-label.vercel.app/" target="_blank" className="text-pink-400 font-medium text-sm flex items-center gap-1 hover:gap-2 transition-all">
-                Lihat Aplikasi <ChevronRight className="w-4 h-4" />
+              <a href="https://kkf-label.vercel.app/" target="_blank" className="text-pink-400 font-medium text-xs sm:text-sm flex items-center gap-1 hover:gap-2 transition-all">
+                Lihat Aplikasi <ChevronRight className="w-3 h-3 sm:w-4 sm:h-4" />
+              </a>
+            </div>
+
+            {/* Project 7 */}
+            <div className="group relative overflow-hidden rounded-2xl bg-slate-800/50 border border-slate-700 p-4 sm:p-6 hover:border-orange-500/50 transition-all flex flex-col h-full">
+              <div className="flex-1">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-orange-500/10 rounded-lg flex items-center justify-center mb-3 sm:mb-4 text-orange-400 group-hover:scale-110 transition-transform">
+                  <Code className="w-5 h-5 sm:w-6 sm:h-6" />
+                </div>
+                <h3 className="text-lg sm:text-xl font-bold text-slate-200 mb-2">Sadulur Care</h3>
+                <p className="text-slate-400 text-xs sm:text-sm leading-relaxed mb-4 sm:mb-6">
+                  Platform penyedia layanan caregiving dan kesehatan dengan pendekatan empati kekeluargaan.
+                </p>
+              </div>
+              <a href="https://sadulur-care.vercel.app/" target="_blank" className="text-orange-400 font-medium text-xs sm:text-sm flex items-center gap-1 hover:gap-2 transition-all">
+                Lihat Web <ChevronRight className="w-3 h-3 sm:w-4 sm:h-4" />
               </a>
             </div>
 
@@ -286,7 +302,7 @@ export default function Home() {
 
       {/* Footer */}
       <footer className="py-8 text-center text-slate-500 border-t border-slate-800">
-        <p>&copy; {new Date().getFullYear()} Pranata Pramudya. Professional Portfolio.</p>
+        <p>&copy; 2025 Pranata Pramudya. Professional Portfolio.</p>
       </footer>
     </main>
   );
