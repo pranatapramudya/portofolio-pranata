@@ -81,7 +81,7 @@ export default function Home() {
                 Hubungi Saya
               </a>
               <a 
-                href="https://drive.google.com/file/d/1Z5A6gZFijY_xlFF7TZdeYFg7EdPrCFkg/view?usp=sharing" 
+                href="https://drive.google.com/file/d/1jigOkw2IeKVugGHPKGxViqQ-KGGJaXo4/view?usp=sharing" 
                 target="_blank"
                 rel="noreferrer"
                 className="px-8 py-3.5 rounded-full font-semibold text-slate-200 bg-slate-800 border border-slate-700 hover:bg-slate-700 transition-all flex items-center gap-2"
