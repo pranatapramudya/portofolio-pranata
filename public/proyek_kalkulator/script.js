@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     display.textContent = result;
                     currentInput = result.toString();
                     shouldResetDisplay = true; // Siapkan untuk input baru setelah hasil
-                } catch (error) {
+                } catch {
                     display.textContent = 'Error';
                     currentInput = '';
                 }
