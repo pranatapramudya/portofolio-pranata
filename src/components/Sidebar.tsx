@@ -44,35 +44,68 @@ export default function Sidebar() {
 
   return (
     <>
-      {/* Mobile Toggle Button */}
-      <button
-        onClick={toggleSidebar}
-        aria-label="Toggle Navigation"
-        className="lg:hidden fixed top-4 right-4 z-50 p-2.5 rounded-xl bg-white text-slate-800 border border-slate-200 shadow-sm hover:bg-slate-50 transition-colors cursor-pointer min-h-[44px] min-w-[44px] flex items-center justify-center"
-      >
-        {isOpen ? (
-          <XIcon className="w-6 h-6" />
-        ) : (
-          <MenuIcon className="w-6 h-6" />
-        )}
-      </button>
+      {/* Mobile Top Navbar - Solid & Sticky, Tidak Ngambang Di Atas Konten */}
+      <header className="lg:hidden sticky top-0 z-30 bg-white/95 backdrop-blur-md border-b border-slate-200 px-4 py-2.5 flex items-center justify-between shadow-2xs">
+        <div className="flex items-center gap-3">
+          <div className="w-9 h-9 rounded-xl overflow-hidden border border-slate-200 bg-slate-100 flex-shrink-0">
+            <Image
+              src="/images/foto-profil.jpg"
+              alt="Pranata Pramudya"
+              width={36}
+              height={36}
+              className="w-full h-full object-cover object-top"
+              priority
+            />
+          </div>
+          <div className="leading-tight">
+            <div className="text-sm font-bold text-slate-900">
+              Pranata Pramudya
+            </div>
+            <div className="text-[11px] font-semibold text-blue-600">
+              Systems Architect &amp; Full Stack
+            </div>
+          </div>
+        </div>
 
-      {/* Overlay for mobile */}
+        <button
+          onClick={toggleSidebar}
+          aria-label="Buka Navigasi"
+          className="p-2 rounded-xl bg-slate-50 text-slate-700 border border-slate-200 hover:bg-slate-100 transition-colors cursor-pointer min-h-[40px] min-w-[40px] flex items-center justify-center"
+        >
+          {isOpen ? (
+            <XIcon className="w-5 h-5" />
+          ) : (
+            <MenuIcon className="w-5 h-5" />
+          )}
+        </button>
+      </header>
+
+      {/* Backdrop Overlay for mobile drawer */}
       {isOpen && (
         <div
-          className="lg:hidden fixed inset-0 bg-slate-900/30 z-40 transition-opacity"
+          className="lg:hidden fixed inset-0 bg-slate-950/40 z-40 transition-opacity"
           onClick={closeSidebar}
         />
       )}
 
-      {/* Solid Stationary Sidebar */}
+      {/* Sidebar (Desktop Fixed Panel & Mobile Drawer) */}
       <aside
-        className={`fixed top-0 left-0 h-screen w-64 bg-white border-r border-slate-200 z-40 transition-transform duration-200 ease-in-out ${
-          isOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
+        className={`fixed top-0 left-0 h-screen w-64 bg-white border-r border-slate-200 z-50 transition-transform duration-200 ease-in-out ${
+          isOpen
+            ? "translate-x-0 shadow-2xl"
+            : "-translate-x-full lg:translate-x-0"
         } flex flex-col`}
       >
-        {/* Profile with Real Photo */}
-        <div className="p-6 border-b border-slate-200 text-center">
+        {/* Mobile Close Button & Profile Header */}
+        <div className="p-6 border-b border-slate-200 text-center relative">
+          <button
+            onClick={closeSidebar}
+            aria-label="Tutup Menu"
+            className="lg:hidden absolute top-4 right-4 p-2 text-slate-400 hover:text-slate-700 rounded-lg cursor-pointer"
+          >
+            <XIcon className="w-5 h-5" />
+          </button>
+
           <div className="w-22 h-22 mx-auto rounded-2xl overflow-hidden border border-slate-200 shadow-sm mb-3.5 bg-slate-100 flex items-center justify-center">
             <Image
               src="/images/foto-profil.jpg"
