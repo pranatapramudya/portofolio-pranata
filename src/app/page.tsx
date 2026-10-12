@@ -3,7 +3,6 @@ import {
   Code,
   Mail,
   Award,
-  Sparkles,
   Server,
   Database,
   Cloud,
@@ -23,16 +22,15 @@ export default function Home() {
       {/* Hero Section */}
       <section
         id="home"
-        className="relative min-h-[92vh] flex items-center justify-center py-20 px-4 sm:px-6 lg:px-12 bg-gradient-to-b from-white via-slate-50 to-slate-100/70 border-b border-slate-200/80"
+        className="relative min-h-[88vh] flex items-center justify-center py-16 px-4 sm:px-6 lg:px-12 bg-gradient-to-b from-white via-slate-50 to-slate-100/70 border-b border-slate-200"
       >
         <div className="absolute inset-0 bg-[radial-gradient(#cbd5e1_1px,transparent_1px)] [background-size:24px_24px] opacity-40 pointer-events-none" />
 
         <ScrollReveal className="relative z-10 max-w-5xl mx-auto text-center">
-          {/* Top Pill Status */}
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-50 border border-blue-200 text-blue-700 text-xs sm:text-sm font-semibold mb-6 shadow-sm">
-            <Sparkles className="w-4 h-4 text-blue-600 animate-pulse" />
+          {/* Top Pill Status - Professional Clean Badge without Sparkles */}
+          <div className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-blue-50 border border-blue-200 text-blue-700 text-xs sm:text-sm font-semibold mb-6 shadow-xs">
+            <span className="w-2 h-2 rounded-full bg-emerald-500" />
             <span>Systems Architecture &amp; Full Stack Engineer</span>
-            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping ml-1" />
           </div>
 
           <h1 className="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-slate-900 mb-6 leading-[1.1]">
@@ -137,7 +135,7 @@ export default function Home() {
       </section>
 
       {/* Fundamental Architectural Mastery */}
-      <section className="py-16 px-4 sm:px-6 lg:px-12 bg-white border-b border-slate-200/80">
+      <section className="py-16 px-4 sm:px-6 lg:px-12 bg-white border-b border-slate-200">
         <ScrollReveal className="max-w-6xl mx-auto">
           <div className="p-8 sm:p-10 rounded-3xl bg-gradient-to-br from-blue-50/70 via-slate-50 to-indigo-50/40 border border-blue-100 shadow-sm">
             <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-8">
@@ -199,7 +197,7 @@ export default function Home() {
       {/* Tech Stack Skills */}
       <section
         id="skills"
-        className="py-20 px-4 sm:px-6 lg:px-12 bg-slate-50/60 border-b border-slate-200/80"
+        className="py-20 px-4 sm:px-6 lg:px-12 bg-slate-50/60 border-b border-slate-200"
       >
         <ScrollReveal className="max-w-6xl mx-auto">
           <div className="text-center mb-14">
@@ -347,7 +345,7 @@ export default function Home() {
       {/* Production Projects Showcase */}
       <section
         id="projects"
-        className="py-20 px-4 sm:px-6 lg:px-12 bg-white border-b border-slate-200/80"
+        className="py-20 px-4 sm:px-6 lg:px-12 bg-white border-b border-slate-200"
       >
         <ScrollReveal className="max-w-6xl mx-auto">
           <div className="mb-12">
@@ -370,7 +368,7 @@ export default function Home() {
       {/* Career History & Empirical Achievements */}
       <section
         id="achievements"
-        className="py-20 px-4 sm:px-6 lg:px-12 bg-slate-50/70 border-b border-slate-200/80"
+        className="py-20 px-4 sm:px-6 lg:px-12 bg-slate-50/70 border-b border-slate-200"
       >
         <ScrollReveal className="max-w-6xl mx-auto">
           <div className="text-center mb-14">
