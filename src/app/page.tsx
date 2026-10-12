@@ -11,7 +11,9 @@ import {
   TrendingUp,
   Zap,
   Cpu,
+  Gamepad2,
 } from "lucide-react";
+import Link from "next/link";
 import { GithubIcon, LinkedinIcon } from "@/components/icons";
 import ScrollReveal from "@/components/ScrollReveal";
 import ProjectShowcase from "@/components/ProjectShowcase";
@@ -54,6 +56,14 @@ export default function Home() {
               Eksplorasi Proyek Nyata
             </a>
 
+            <Link
+              href="/game"
+              className="px-6 py-3.5 rounded-xl font-bold text-sm text-indigo-700 bg-indigo-50 border border-indigo-200 hover:bg-indigo-100 hover:border-indigo-300 transition-all shadow-sm flex items-center gap-2 min-h-[44px]"
+            >
+              <Gamepad2 className="w-4 h-4 text-indigo-600" />
+              <span>🎮 Mode Game 3D</span>
+            </Link>
+
             <a
               href="#contact"
               className="px-6 py-3.5 rounded-xl font-semibold text-sm text-slate-800 bg-white border border-slate-300 hover:bg-slate-50 hover:border-slate-400 transition-all shadow-sm flex items-center gap-2 min-h-[44px]"
@@ -69,7 +79,7 @@ export default function Home() {
               className="px-5 py-3.5 rounded-xl font-semibold text-sm text-slate-800 bg-slate-100 border border-slate-200 hover:bg-slate-200 transition-all shadow-sm flex items-center gap-2 min-h-[44px]"
             >
               <GithubIcon className="w-4 h-4" />
-              GitHub Profile
+              GitHub
             </a>
           </div>
 

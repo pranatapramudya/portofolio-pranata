@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import {
   HomeIcon,
   UserIcon,
@@ -11,6 +12,7 @@ import {
   XIcon,
   AwardIcon,
 } from "./icons";
+import { Gamepad2 } from "lucide-react";
 
 export default function Sidebar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -19,25 +21,25 @@ export default function Sidebar() {
   const closeSidebar = () => setIsOpen(false);
 
   const navLinks = [
-    { name: "Beranda", href: "#home", icon: <HomeIcon className="w-5 h-5" /> },
+    { name: "Beranda", href: "/#home", icon: <HomeIcon className="w-5 h-5" /> },
     {
       name: "Keahlian",
-      href: "#skills",
+      href: "/#skills",
       icon: <UserIcon className="w-5 h-5" />,
     },
     {
       name: "Proyek Nyata",
-      href: "#projects",
+      href: "/#projects",
       icon: <BriefcaseIcon className="w-5 h-5" />,
     },
     {
       name: "Pencapaian & Riwayat",
-      href: "#achievements",
+      href: "/#achievements",
       icon: <AwardIcon className="w-5 h-5" />,
     },
     {
       name: "Kontak",
-      href: "#contact",
+      href: "/#contact",
       icon: <MailIcon className="w-5 h-5" />,
     },
   ];
@@ -67,17 +69,27 @@ export default function Sidebar() {
           </div>
         </div>
 
-        <button
-          onClick={toggleSidebar}
-          aria-label="Buka Navigasi"
-          className="p-2 rounded-xl bg-slate-50 text-slate-700 border border-slate-200 hover:bg-slate-100 transition-colors cursor-pointer min-h-[40px] min-w-[40px] flex items-center justify-center"
-        >
-          {isOpen ? (
-            <XIcon className="w-5 h-5" />
-          ) : (
-            <MenuIcon className="w-5 h-5" />
-          )}
-        </button>
+        <div className="flex items-center gap-2">
+          <Link
+            href="/game"
+            className="p-2 rounded-xl bg-indigo-50 text-indigo-700 border border-indigo-200 text-xs font-bold flex items-center gap-1.5 min-h-[40px]"
+          >
+            <Gamepad2 className="w-4 h-4" />
+            <span className="hidden sm:inline">Game 3D</span>
+          </Link>
+
+          <button
+            onClick={toggleSidebar}
+            aria-label="Buka Navigasi"
+            className="p-2 rounded-xl bg-slate-50 text-slate-700 border border-slate-200 hover:bg-slate-100 transition-colors cursor-pointer min-h-[40px] min-w-[40px] flex items-center justify-center"
+          >
+            {isOpen ? (
+              <XIcon className="w-5 h-5" />
+            ) : (
+              <MenuIcon className="w-5 h-5" />
+            )}
+          </button>
+        </div>
       </header>
 
       {/* Backdrop Overlay for mobile drawer */}
@@ -128,7 +140,7 @@ export default function Sidebar() {
         </div>
 
         {/* Navigation */}
-        <nav className="flex-1 px-3.5 py-5 space-y-1 overflow-y-auto">
+        <nav className="flex-1 px-3.5 py-4 space-y-1 overflow-y-auto">
           {navLinks.map((link) => (
             <a
               key={link.name}
@@ -142,6 +154,32 @@ export default function Sidebar() {
               <span className="text-sm font-semibold">{link.name}</span>
             </a>
           ))}
+
+          {/* 3D Game Banner in Sidebar */}
+          <div className="pt-3">
+            <Link
+              href="/game"
+              onClick={closeSidebar}
+              className="flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-indigo-50 to-blue-50 border border-indigo-200/80 hover:border-indigo-400 text-indigo-700 transition-all group min-h-[44px] shadow-2xs"
+            >
+              <div className="flex items-center gap-2.5">
+                <div className="p-1.5 rounded-lg bg-indigo-600 text-white shadow-2xs">
+                  <Gamepad2 className="w-4 h-4" />
+                </div>
+                <div>
+                  <div className="text-xs font-bold leading-tight">
+                    Simulator 3D
+                  </div>
+                  <div className="text-[10px] text-indigo-500 font-semibold">
+                    Mode Game Interaktif
+                  </div>
+                </div>
+              </div>
+              <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-indigo-600 text-white">
+                Main
+              </span>
+            </Link>
+          </div>
         </nav>
 
         {/* Footer Area */}
