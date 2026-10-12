@@ -6,15 +6,15 @@ import {
   ArrowLeft,
   ExternalLink,
   Gamepad2,
-  Compass,
   CheckCircle,
   Trophy,
   X,
-  RotateCcw,
   Sparkles,
   Volume2,
   VolumeX,
-  ChevronRight,
+  Compass,
+  Zap,
+  Info,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -31,7 +31,7 @@ interface ZoneData {
   tags: string[];
   liveUrl?: string;
   stats: string;
-  buildingType: "factory" | "shop" | "cloud" | "radar" | "clinic" | "campus";
+  stationType: "factory" | "pos" | "cloud" | "radar" | "clinic" | "academic";
 }
 
 const ZONES: ZoneData[] = [
@@ -41,15 +41,15 @@ const ZONES: ZoneData[] = [
     subtitle: "Industrial ERP & Manufacturing Engine",
     category: "Enterprise System",
     year: "2026",
-    color: 0x0284c7, // Sky Blue
+    color: 0x0284c7,
     hexColor: "#0284c7",
-    position: [-8, 0, -8],
+    position: [-8, 0, -7],
     description:
       "Sistem otomasi ERP pabrik label kemasan industri skala besar. Dilengkapi kalkulator bahan baku dinamis dan analitik antrian pesanan.",
     tags: ["Next.js App Router", "TypeScript", "PostgreSQL", "Prisma"],
     liveUrl: "https://kkflabel.com",
     stats: "Produksi 10.000+ Roll Label/Bulan",
-    buildingType: "factory",
+    stationType: "factory",
   },
   {
     id: "pjtech-umkm",
@@ -57,15 +57,15 @@ const ZONES: ZoneData[] = [
     subtitle: "Cloud Point-of-Sale & Multi-Branch Engine",
     category: "Retail Ecosystem",
     year: "2026",
-    color: 0x059669, // Emerald
+    color: 0x059669,
     hexColor: "#059669",
-    position: [8, 0, -8],
+    position: [8, 0, -7],
     description:
       "Platform digitalisasi kasir cerdas dan pembukuan komprehensif bagi pelaku UMKM dengan rekonsiliasi QRIS dan multi-tenant isolation.",
     tags: ["React 19", "Node.js", "Express", "Neon DB", "Redis"],
     liveUrl: "https://pjtechumkm.com",
     stats: "Aktif Melayani Ratusan UMKM",
-    buildingType: "shop",
+    stationType: "pos",
   },
   {
     id: "pranajaya-tech",
@@ -73,7 +73,7 @@ const ZONES: ZoneData[] = [
     subtitle: "Digital Infrastructure & Cloud Hub",
     category: "Agency Infrastructure",
     year: "2026",
-    color: 0x4f46e5, // Indigo
+    color: 0x4f46e5,
     hexColor: "#4f46e5",
     position: [-10, 0, 4],
     description:
@@ -81,7 +81,7 @@ const ZONES: ZoneData[] = [
     tags: ["Next.js", "Docker", "Cloudflare DNS", "Nginx"],
     liveUrl: "https://pranajayatech.online",
     stats: "Uptime 99.9% Cloud Platform",
-    buildingType: "cloud",
+    stationType: "cloud",
   },
   {
     id: "whale-tracker",
@@ -89,14 +89,14 @@ const ZONES: ZoneData[] = [
     subtitle: "High-Throughput On-Chain Event Stream",
     category: "Real-Time Systems",
     year: "2025",
-    color: 0x06b6d4, // Cyan
+    color: 0x06b6d4,
     hexColor: "#06b6d4",
     position: [10, 0, 4],
     description:
       "Engine pemantau pergerakan transaksi dompet kripto besar (whale) secara real-time via WebSocket dengan pemrosesan ribuan event/detik.",
     tags: ["WebSocket", "Redis Pub/Sub", "TypeScript", "TimescaleDB"],
     stats: "Sub-second Event Ingestion",
-    buildingType: "radar",
+    stationType: "radar",
   },
   {
     id: "clinic-saas",
@@ -104,14 +104,14 @@ const ZONES: ZoneData[] = [
     subtitle: "Clinical Workflow & Usability Research",
     category: "Healthcare System",
     year: "2023 - 2025",
-    color: 0xe11d48, // Rose
+    color: 0xe11d48,
     hexColor: "#e11d48",
-    position: [-3, 0, 10],
+    position: [-4, 0, 9],
     description:
       "Audit alur pelayanan rekam medis klinik yang sukses memangkas waktu input data pasien dari 6 menit menjadi 2 menit dengan validasi SUS.",
     tags: ["SUS Score 81.2", "Efisiensi 66%", "UCD Research", "ICD-10"],
     stats: "Skor SUS 'Excellent' (81.2)",
-    buildingType: "clinic",
+    stationType: "clinic",
   },
   {
     id: "campus-unsap",
@@ -119,30 +119,37 @@ const ZONES: ZoneData[] = [
     subtitle: "Pendidikan S1 & Sertifikasi Google Cloud",
     category: "Academic & Certs",
     year: "2021 - 2025",
-    color: 0x8b5cf6, // Violet
+    color: 0x8b5cf6,
     hexColor: "#8b5cf6",
-    position: [5, 0, 10],
+    position: [5, 0, 9],
     description:
       "Pendidikan Sarjana Teknik Informatika dengan predikat Sangat Memuaskan (IPK 3.43) serta sertifikasi resmi Google Cloud Computing.",
     tags: ["IPK 3.43", "Google Cloud", "Wadhwani Foundation"],
     stats: "Lulusan 2025 (S.Kom.)",
-    buildingType: "campus",
+    stationType: "academic",
   },
 ];
 
 export default function PortfolioGame() {
   const mountRef = useRef<HTMLDivElement>(null);
+  const miniMapCanvasRef = useRef<HTMLCanvasElement>(null);
+
   const [activeZone, setActiveZone] = useState<ZoneData | null>(null);
   const [visitedZones, setVisitedZones] = useState<string[]>([]);
   const [nearZone, setNearZone] = useState<ZoneData | null>(null);
   const [audioEnabled, setAudioEnabled] = useState(false);
-  const [showControlsHint, setShowControlsHint] = useState(true);
+  const [showHeroBanner, setShowHeroBanner] = useState(true);
+  const [fps, setFps] = useState(60);
+  const [boltState, setBoltState] = useState<
+    "idle" | "walking" | "sprinting" | "jumping"
+  >("idle");
 
-  // Audio synthesize ref
+  // Audio Synthesizer (Web Audio API)
   const audioCtxRef = useRef<AudioContext | null>(null);
 
-  // Play simple 8-bit sound fx using Web Audio API
-  const playSound = (type: "step" | "discover" | "open" | "win") => {
+  const playSound = (
+    type: "step" | "jump" | "ball" | "discover" | "open" | "win",
+  ) => {
     if (!audioEnabled) return;
     try {
       if (!audioCtxRef.current) {
@@ -159,19 +166,36 @@ export default function PortfolioGame() {
       const gain = ctx.createGain();
       osc.connect(gain);
       gain.connect(ctx.destination);
-
       const now = ctx.currentTime;
+
       if (type === "step") {
-        osc.frequency.setValueAtTime(220, now);
-        osc.frequency.exponentialRampToValueAtTime(110, now + 0.05);
-        gain.gain.setValueAtTime(0.04, now);
-        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
+        osc.frequency.setValueAtTime(180, now);
+        osc.frequency.exponentialRampToValueAtTime(90, now + 0.04);
+        gain.gain.setValueAtTime(0.02, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.04);
         osc.start(now);
-        osc.stop(now + 0.05);
+        osc.stop(now + 0.04);
+      } else if (type === "jump") {
+        osc.type = "sine";
+        osc.frequency.setValueAtTime(260, now);
+        osc.frequency.exponentialRampToValueAtTime(540, now + 0.14);
+        gain.gain.setValueAtTime(0.06, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.14);
+        osc.start(now);
+        osc.stop(now + 0.14);
+      } else if (type === "ball") {
+        osc.type = "triangle";
+        osc.frequency.setValueAtTime(320, now);
+        osc.frequency.exponentialRampToValueAtTime(140, now + 0.09);
+        gain.gain.setValueAtTime(0.08, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.09);
+        osc.start(now);
+        osc.stop(now + 0.09);
       } else if (type === "discover") {
+        osc.type = "sine";
         osc.frequency.setValueAtTime(440, now);
         osc.frequency.exponentialRampToValueAtTime(880, now + 0.15);
-        gain.gain.setValueAtTime(0.08, now);
+        gain.gain.setValueAtTime(0.07, now);
         gain.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
         osc.start(now);
         osc.stop(now + 0.15);
@@ -180,10 +204,10 @@ export default function PortfolioGame() {
         osc.frequency.setValueAtTime(523.25, now);
         osc.frequency.setValueAtTime(659.25, now + 0.08);
         osc.frequency.setValueAtTime(783.99, now + 0.16);
-        gain.gain.setValueAtTime(0.1, now);
-        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
+        gain.gain.setValueAtTime(0.09, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.24);
         osc.start(now);
-        osc.stop(now + 0.25);
+        osc.stop(now + 0.24);
       } else if (type === "win") {
         osc.type = "triangle";
         osc.frequency.setValueAtTime(440, now);
@@ -196,7 +220,7 @@ export default function PortfolioGame() {
         osc.stop(now + 0.5);
       }
     } catch {
-      // Audio not supported or blocked
+      // Audio not permitted
     }
   };
 
@@ -204,18 +228,17 @@ export default function PortfolioGame() {
     const container = mountRef.current;
     if (!container) return;
 
-    // --- SCENE SETUP ---
+    // --- THREE.JS SCENE SETUP (WARM CLAY / SANCTUARY AESTHETIC) ---
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0xf1f5f9); // Slate-100 clean sky
-    scene.fog = new THREE.FogExp2(0xf1f5f9, 0.025);
+    scene.background = new THREE.Color(0xf6f1eb); // Warm cream floor tone
+    scene.fog = new THREE.FogExp2(0xf6f1eb, 0.022);
 
     const width = container.clientWidth;
     const height = container.clientHeight;
 
-    // Isometric-style Perspective Camera
-    const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
-    camera.position.set(0, 18, 22);
-    camera.lookAt(0, 0, 0);
+    const camera = new THREE.PerspectiveCamera(48, width / height, 0.1, 1000);
+    // Initial camera position looking at Bolt in Sanctuary
+    camera.position.set(0, 8, 14);
 
     const renderer = new THREE.WebGLRenderer({
       antialias: true,
@@ -225,337 +248,723 @@ export default function PortfolioGame() {
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.05;
     container.appendChild(renderer.domElement);
 
-    // --- LIGHTS ---
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.85);
-    scene.add(ambientLight);
+    // --- LIGHTING (SOFT WARM ARCHITECTURAL LIGHTING) ---
+    const hemiLight = new THREE.HemisphereLight(0xfff7ed, 0xe2d9cc, 0.85);
+    scene.add(hemiLight);
 
-    const dirLight = new THREE.DirectionalLight(0xffffff, 1.2);
-    dirLight.position.set(15, 25, 15);
-    dirLight.castShadow = true;
-    dirLight.shadow.mapSize.width = 1024;
-    dirLight.shadow.mapSize.height = 1024;
-    dirLight.shadow.camera.near = 0.5;
-    dirLight.shadow.camera.far = 80;
-    const d = 25;
-    dirLight.shadow.camera.left = -d;
-    dirLight.shadow.camera.right = d;
-    dirLight.shadow.camera.top = d;
-    dirLight.shadow.camera.bottom = -d;
-    dirLight.shadow.bias = -0.0005;
-    scene.add(dirLight);
+    const mainLight = new THREE.DirectionalLight(0xfffbf0, 1.4);
+    mainLight.position.set(16, 24, 14);
+    mainLight.castShadow = true;
+    mainLight.shadow.mapSize.width = 2048;
+    mainLight.shadow.mapSize.height = 2048;
+    mainLight.shadow.camera.near = 0.5;
+    mainLight.shadow.camera.far = 70;
+    const shadowDist = 20;
+    mainLight.shadow.camera.left = -shadowDist;
+    mainLight.shadow.camera.right = shadowDist;
+    mainLight.shadow.camera.top = shadowDist;
+    mainLight.shadow.camera.bottom = -shadowDist;
+    mainLight.shadow.bias = -0.0004;
+    scene.add(mainLight);
 
-    // --- WORLD ENVIRONMENT / ISLAND ---
-    // Floating island platform
-    const islandGeo = new THREE.CylinderGeometry(18, 16, 2, 32);
-    const islandMat = new THREE.MeshStandardMaterial({
-      color: 0xffffff,
+    const fillLight = new THREE.DirectionalLight(0xbae6fd, 0.4);
+    fillLight.position.set(-14, 12, -10);
+    scene.add(fillLight);
+
+    // --- PLAYROOM ENVIRONMENT (THE SANCTUARY) ---
+    // 1. Warm Cream Floor
+    const floorGeo = new THREE.PlaneGeometry(36, 36);
+    const floorMat = new THREE.MeshStandardMaterial({
+      color: 0xf5efe6,
+      roughness: 0.65,
+      metalness: 0.05,
+    });
+    const floor = new THREE.Mesh(floorGeo, floorMat);
+    floor.rotation.x = -Math.PI / 2;
+    floor.receiveShadow = true;
+    scene.add(floor);
+
+    // 2. Terracotta Coral Running Track / Curved Ring (As seen in Dea Afrizal's video)
+    const trackGeo = new THREE.RingGeometry(4.2, 7.8, 64);
+    const trackMat = new THREE.MeshStandardMaterial({
+      color: 0xe07a5f, // Terracotta coral
       roughness: 0.8,
-      metalness: 0.1,
+      metalness: 0.02,
     });
-    const island = new THREE.Mesh(islandGeo, islandMat);
-    island.position.y = -1;
-    island.receiveShadow = true;
-    scene.add(island);
+    const track = new THREE.Mesh(trackGeo, trackMat);
+    track.rotation.x = -Math.PI / 2;
+    track.position.set(0, 0.015, -1);
+    track.receiveShadow = true;
+    scene.add(track);
 
-    // Grid Floor Overlay
-    const gridHelper = new THREE.GridHelper(32, 32, 0xcbd5e1, 0xe2e8f0);
-    gridHelper.position.y = 0.01;
-    scene.add(gridHelper);
-
-    // Center Plaza Pad
-    const plazaGeo = new THREE.CylinderGeometry(3.5, 3.5, 0.1, 32);
-    const plazaMat = new THREE.MeshStandardMaterial({
-      color: 0x2563eb,
-      roughness: 0.4,
-    });
-    const plaza = new THREE.Mesh(plazaGeo, plazaMat);
-    plaza.position.y = 0.02;
-    plaza.receiveShadow = true;
-    scene.add(plaza);
-
-    // Decorative Low-Poly Trees around island perimeter
-    const treeMatTrunk = new THREE.MeshStandardMaterial({ color: 0x94a3b8 });
-    const treeMatLeaves = new THREE.MeshStandardMaterial({
-      color: 0x10b981,
+    // Inner Cream Island
+    const innerTrackGeo = new THREE.CircleGeometry(4.18, 64);
+    const innerTrackMat = new THREE.MeshStandardMaterial({
+      color: 0xfdfbf7,
       roughness: 0.6,
     });
-    for (let i = 0; i < 14; i++) {
-      const angle = (i / 14) * Math.PI * 2;
-      const radius = 15.5 + Math.sin(i * 3) * 0.8;
-      const tx = Math.cos(angle) * radius;
-      const tz = Math.sin(angle) * radius;
+    const innerTrack = new THREE.Mesh(innerTrackGeo, innerTrackMat);
+    innerTrack.rotation.x = -Math.PI / 2;
+    innerTrack.position.set(0, 0.02, -1);
+    innerTrack.receiveShadow = true;
+    scene.add(innerTrack);
 
-      const trunk = new THREE.Mesh(
-        new THREE.CylinderGeometry(0.2, 0.25, 1.2, 6),
-        treeMatTrunk,
-      );
-      trunk.position.set(tx, 0.6, tz);
-      trunk.castShadow = true;
-      scene.add(trunk);
+    // 3. Playroom Walls (Back & Left Walls with clean architectural openings)
+    const wallMat = new THREE.MeshStandardMaterial({
+      color: 0xf3eee8,
+      roughness: 0.9,
+    });
+    const baseboardMat = new THREE.MeshStandardMaterial({
+      color: 0x99f6e4, // Mint pastel trim
+      roughness: 0.4,
+    });
 
-      const foliage = new THREE.Mesh(
-        new THREE.ConeGeometry(1.2, 2.2, 7),
-        treeMatLeaves,
+    // Back Wall
+    const backWall = new THREE.Mesh(new THREE.BoxGeometry(36, 6, 0.6), wallMat);
+    backWall.position.set(0, 3, -15);
+    backWall.receiveShadow = true;
+    scene.add(backWall);
+
+    const backTrim = new THREE.Mesh(
+      new THREE.BoxGeometry(36, 0.25, 0.65),
+      baseboardMat,
+    );
+    backTrim.position.set(0, 0.125, -15);
+    scene.add(backTrim);
+
+    // Left Wall
+    const leftWall = new THREE.Mesh(new THREE.BoxGeometry(0.6, 6, 36), wallMat);
+    leftWall.position.set(-16, 3, 0);
+    leftWall.receiveShadow = true;
+    scene.add(leftWall);
+
+    const leftTrim = new THREE.Mesh(
+      new THREE.BoxGeometry(0.65, 0.25, 36),
+      baseboardMat,
+    );
+    leftTrim.position.set(-16, 0.125, 0);
+    scene.add(leftTrim);
+
+    // 4. Wooden Stairs & Elevated Mezzanine Ramp (As seen on left side in video)
+    const rampGroup = new THREE.Group();
+    rampGroup.position.set(-11, 0, -8);
+
+    // Elevated platform
+    const platformGeo = new THREE.BoxGeometry(7, 1.4, 5);
+    const platformMat = new THREE.MeshStandardMaterial({
+      color: 0xffedd5, // Warm birch/light oak
+      roughness: 0.5,
+    });
+    const platform = new THREE.Mesh(platformGeo, platformMat);
+    platform.position.set(0, 0.7, 0);
+    platform.castShadow = true;
+    platform.receiveShadow = true;
+    rampGroup.add(platform);
+
+    // Ramp Incline (Walking ramp)
+    const rampSlopeGeo = new THREE.BoxGeometry(4, 0.25, 4.5);
+    const rampSlope = new THREE.Mesh(
+      rampSlopeGeo,
+      new THREE.MeshStandardMaterial({ color: 0x99f6e4, roughness: 0.4 }),
+    );
+    rampSlope.position.set(4.5, 0.7, 0);
+    rampSlope.rotation.z = -0.32; // Slope down to floor
+    rampSlope.castShadow = true;
+    rampSlope.receiveShadow = true;
+    rampGroup.add(rampSlope);
+
+    // Mint Handrails / Guardrails
+    const railMat = new THREE.MeshStandardMaterial({
+      color: 0x5eead4,
+      metalness: 0.3,
+      roughness: 0.2,
+    });
+    const railTop = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.06, 0.06, 6.8, 12),
+      railMat,
+    );
+    railTop.rotation.z = Math.PI / 2;
+    railTop.position.set(0, 2.1, 2.45);
+    rampGroup.add(railTop);
+
+    for (let r = -3; r <= 3; r += 1.5) {
+      const post = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.04, 0.04, 0.7, 8),
+        railMat,
       );
-      foliage.position.set(tx, 1.8, tz);
-      foliage.castShadow = true;
-      scene.add(foliage);
+      post.position.set(r, 1.75, 2.45);
+      post.castShadow = true;
+      rampGroup.add(post);
+    }
+    scene.add(rampGroup);
+
+    // 5. Furniture & Props: Minimalist Workstation & Plant (As in video background)
+    // Credenza / Cabinet against back wall
+    const credenzaGeo = new THREE.BoxGeometry(5.5, 1.8, 1.2);
+    const credenzaMat = new THREE.MeshStandardMaterial({
+      color: 0xfdfaf6,
+      roughness: 0.3,
+    });
+    const credenza = new THREE.Mesh(credenzaGeo, credenzaMat);
+    credenza.position.set(-1, 0.9, -14);
+    credenza.castShadow = true;
+    credenza.receiveShadow = true;
+    scene.add(credenza);
+
+    // Pastel Books & Devices on credenza
+    const bookColors = [0x38bdf8, 0xf43f5e, 0x10b981, 0xfbbf24];
+    for (let b = 0; b < 4; b++) {
+      const book = new THREE.Mesh(
+        new THREE.BoxGeometry(0.2, 0.6, 0.7),
+        new THREE.MeshStandardMaterial({ color: bookColors[b] }),
+      );
+      book.position.set(-2.4 + b * 0.3, 1.95, -14);
+      book.castShadow = true;
+      scene.add(book);
     }
 
-    // --- BUILDINGS & INTERACTIVE ZONES ---
-    const zoneRings: THREE.Mesh[] = [];
+    // Modern Ceramic Plant Pot with Monstera Leaves
+    const potGeo = new THREE.CylinderGeometry(0.65, 0.45, 1.1, 24);
+    const potMat = new THREE.MeshStandardMaterial({
+      color: 0xdd6b4d, // Terracotta
+      roughness: 0.8,
+    });
+    const pot = new THREE.Mesh(potGeo, potMat);
+    pot.position.set(-5.5, 0.55, -13.8);
+    pot.castShadow = true;
+    scene.add(pot);
+
+    // Leaves
+    const leafMat = new THREE.MeshStandardMaterial({
+      color: 0x15803d,
+      roughness: 0.4,
+      side: THREE.DoubleSide,
+    });
+    for (let l = 0; l < 5; l++) {
+      const angle = (l / 5) * Math.PI * 2;
+      const leafStem = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.03, 0.03, 1.2, 8),
+        leafMat,
+      );
+      leafStem.position.set(
+        -5.5 + Math.cos(angle) * 0.3,
+        1.5,
+        -13.8 + Math.sin(angle) * 0.3,
+      );
+      leafStem.rotation.z = Math.cos(angle) * 0.5;
+      leafStem.rotation.x = Math.sin(angle) * 0.5;
+      leafStem.castShadow = true;
+      scene.add(leafStem);
+
+      const leafBlade = new THREE.Mesh(
+        new THREE.SphereGeometry(0.45, 8, 8),
+        leafMat,
+      );
+      leafBlade.scale.set(1, 0.1, 1.8);
+      leafBlade.position
+        .copy(leafStem.position)
+        .add(new THREE.Vector3(0, 0.5, 0));
+      leafBlade.castShadow = true;
+      scene.add(leafBlade);
+    }
+
+    // 6. Agility Ring / Hoop Obstacle on Floor (From video)
+    const hoopGeo = new THREE.TorusGeometry(0.9, 0.08, 16, 32);
+    const hoopMat = new THREE.MeshStandardMaterial({
+      color: 0x2dd4bf, // Mint teal hoop
+      roughness: 0.3,
+    });
+    const hoop = new THREE.Mesh(hoopGeo, hoopMat);
+    hoop.rotation.x = -Math.PI / 2;
+    hoop.position.set(1.8, 0.04, -2.5);
+    scene.add(hoop);
+
+    // Orange Agility Slalom Posts
+    const poleColors = [0xf97316, 0xffffff, 0xf97316];
+    for (let p = 0; p < 2; p++) {
+      const poleGroup = new THREE.Group();
+      const pz = -4.5 + p * 2.2;
+      poleGroup.position.set(-1.2, 0, pz);
+
+      const base = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.35, 0.4, 0.1, 16),
+        new THREE.MeshStandardMaterial({ color: 0x94a3b8 }),
+      );
+      base.position.y = 0.05;
+      base.castShadow = true;
+      poleGroup.add(base);
+
+      const poleStem = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.06, 0.06, 1.8, 12),
+        new THREE.MeshStandardMaterial({ color: 0xf97316 }),
+      );
+      poleStem.position.y = 0.95;
+      poleStem.castShadow = true;
+      poleGroup.add(poleStem);
+      scene.add(poleGroup);
+    }
+
+    // 7. Interactive Green Tennis Ball with Physics!
+    const ballRadius = 0.45;
+    const ballGeo = new THREE.SphereGeometry(ballRadius, 32, 32);
+    const ballMat = new THREE.MeshStandardMaterial({
+      color: 0x93e047, // Vibrant lime tennis green
+      roughness: 0.6,
+      metalness: 0.05,
+    });
+    const ballMesh = new THREE.Mesh(ballGeo, ballMat);
+    ballMesh.castShadow = true;
+    ballMesh.receiveShadow = true;
+    scene.add(ballMesh);
+
+    // Tennis Seam (White line around ball)
+    const seamGeo = new THREE.TorusGeometry(ballRadius + 0.005, 0.02, 16, 64);
+    const seamMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
+    const seam = new THREE.Mesh(seamGeo, seamMat);
+    seam.rotation.x = Math.PI / 3;
+    ballMesh.add(seam);
+
+    // Ball Physics State
+    const ballPos = new THREE.Vector3(0.5, ballRadius, -1.8);
+    const ballVel = new THREE.Vector3(0, 0, 0);
+    ballMesh.position.copy(ballPos);
+
+    // --- INTERACTIVE PROJECT STATIONS (PRANATA'S ECOSYSTEM) ---
+    const stationRings: THREE.Mesh[] = [];
 
     ZONES.forEach((zone) => {
       const [zx, , zz] = zone.position;
 
-      // Pedestal Ring
-      const ringGeo = new THREE.RingGeometry(1.6, 2.1, 32);
-      const ringMat = new THREE.MeshBasicMaterial({
+      // Outer Pulsing Glow Disc on Floor
+      const discGeo = new THREE.RingGeometry(1.6, 2.1, 32);
+      const discMat = new THREE.MeshBasicMaterial({
         color: zone.color,
         side: THREE.DoubleSide,
         transparent: true,
-        opacity: 0.7,
+        opacity: 0.75,
       });
-      const ring = new THREE.Mesh(ringGeo, ringMat);
-      ring.rotation.x = -Math.PI / 2;
-      ring.position.set(zx, 0.05, zz);
-      scene.add(ring);
-      zoneRings.push(ring);
+      const disc = new THREE.Mesh(discGeo, discMat);
+      disc.rotation.x = -Math.PI / 2;
+      disc.position.set(zx, 0.03, zz);
+      scene.add(disc);
+      stationRings.push(disc);
 
-      // Building Group
-      const bGroup = new THREE.Group();
-      bGroup.position.set(zx, 0, zz);
+      // Kiosk Station Hub
+      const sGroup = new THREE.Group();
+      sGroup.position.set(zx, 0, zz);
 
-      // Procedural Low-Poly Landmark Buildings
-      if (zone.buildingType === "factory") {
-        // Factory Block + Chimney
-        const body = new THREE.Mesh(
-          new THREE.BoxGeometry(2.4, 2, 2),
-          new THREE.MeshStandardMaterial({ color: 0xe2e8f0, roughness: 0.5 }),
-        );
-        body.position.y = 1;
-        body.castShadow = true;
-        bGroup.add(body);
+      // Pedestal Base
+      const baseGeo = new THREE.CylinderGeometry(1.1, 1.3, 0.4, 16);
+      const baseMat = new THREE.MeshStandardMaterial({
+        color: 0xffffff,
+        roughness: 0.2,
+      });
+      const base = new THREE.Mesh(baseGeo, baseMat);
+      base.position.y = 0.2;
+      base.castShadow = true;
+      base.receiveShadow = true;
+      sGroup.add(base);
 
-        const roof = new THREE.Mesh(
-          new THREE.ConeGeometry(1.8, 1, 4),
-          new THREE.MeshStandardMaterial({ color: zone.color }),
+      if (zone.stationType === "factory") {
+        // KKF Label: Packaging roll model & ERP terminal
+        const rollGeo = new THREE.CylinderGeometry(0.55, 0.55, 1.2, 24);
+        const rollMat = new THREE.MeshStandardMaterial({
+          color: zone.color,
+          roughness: 0.4,
+        });
+        const roll = new THREE.Mesh(rollGeo, rollMat);
+        roll.position.set(0, 1.1, 0);
+        roll.rotation.z = Math.PI / 2;
+        roll.castShadow = true;
+        sGroup.add(roll);
+      } else if (zone.stationType === "pos") {
+        // PJTech UMKM: Cashier register console & barcode scanner
+        const desk = new THREE.Mesh(
+          new THREE.BoxGeometry(1.2, 1, 0.9),
+          new THREE.MeshStandardMaterial({ color: 0x1e293b }),
         );
-        roof.position.y = 2.5;
-        roof.rotation.y = Math.PI / 4;
-        roof.castShadow = true;
-        bGroup.add(roof);
+        desk.position.y = 0.7;
+        desk.castShadow = true;
+        sGroup.add(desk);
 
-        const chimney = new THREE.Mesh(
-          new THREE.CylinderGeometry(0.25, 0.25, 1.5, 8),
-          new THREE.MeshStandardMaterial({ color: 0x64748b }),
+        const screen = new THREE.Mesh(
+          new THREE.BoxGeometry(0.8, 0.5, 0.08),
+          new THREE.MeshBasicMaterial({ color: zone.color }),
         );
-        chimney.position.set(0.7, 2.5, 0.7);
-        chimney.castShadow = true;
-        bGroup.add(chimney);
-      } else if (zone.buildingType === "shop") {
-        // POS Storefront
-        const shop = new THREE.Mesh(
-          new THREE.BoxGeometry(2.2, 1.8, 2.2),
-          new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.4 }),
-        );
-        shop.position.y = 0.9;
-        shop.castShadow = true;
-        bGroup.add(shop);
-
-        const awning = new THREE.Mesh(
-          new THREE.BoxGeometry(2.4, 0.3, 0.8),
-          new THREE.MeshStandardMaterial({ color: zone.color }),
-        );
-        awning.position.set(0, 1.8, 1.1);
-        awning.rotation.x = 0.2;
-        bGroup.add(awning);
-      } else if (zone.buildingType === "cloud") {
-        // Cloud Server Tower
+        screen.position.set(0, 1.4, 0.1);
+        screen.rotation.x = -0.3;
+        sGroup.add(screen);
+      } else if (zone.stationType === "cloud") {
+        // PranaJaya Tech: Server tower with glowing LED strips
         const tower = new THREE.Mesh(
-          new THREE.CylinderGeometry(1, 1.2, 3, 8),
+          new THREE.BoxGeometry(0.9, 1.8, 0.9),
           new THREE.MeshStandardMaterial({
-            color: 0x1e293b,
+            color: 0x0f172a,
             roughness: 0.3,
-            metalness: 0.6,
+            metalness: 0.7,
           }),
         );
-        tower.position.y = 1.5;
+        tower.position.y = 1.1;
         tower.castShadow = true;
-        bGroup.add(tower);
+        sGroup.add(tower);
 
-        const orb = new THREE.Mesh(
-          new THREE.SphereGeometry(0.7, 16, 16),
-          new THREE.MeshStandardMaterial({
-            color: zone.color,
-            emissive: zone.color,
-            emissiveIntensity: 0.4,
-          }),
+        const ledStrip = new THREE.Mesh(
+          new THREE.BoxGeometry(0.08, 1.4, 0.92),
+          new THREE.MeshBasicMaterial({ color: zone.color }),
         );
-        orb.position.y = 3.5;
-        bGroup.add(orb);
-      } else if (zone.buildingType === "radar") {
-        // Radar Dish Station
-        const base = new THREE.Mesh(
-          new THREE.CylinderGeometry(1.2, 1.4, 1.2, 8),
-          new THREE.MeshStandardMaterial({ color: 0x334155 }),
-        );
-        base.position.y = 0.6;
-        base.castShadow = true;
-        bGroup.add(base);
-
-        const dish = new THREE.Mesh(
-          new THREE.ConeGeometry(1.4, 0.7, 16),
-          new THREE.MeshStandardMaterial({ color: zone.color, roughness: 0.3 }),
-        );
-        dish.position.set(0, 1.8, 0);
-        dish.rotation.x = Math.PI / 4;
-        dish.rotation.z = Math.PI / 6;
-        bGroup.add(dish);
-      } else if (zone.buildingType === "clinic") {
-        // Medical Clinic with Cross
-        const clinic = new THREE.Mesh(
-          new THREE.BoxGeometry(2.4, 2, 2.4),
-          new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.3 }),
-        );
-        clinic.position.y = 1;
-        clinic.castShadow = true;
-        bGroup.add(clinic);
-
-        const crossH = new THREE.Mesh(
-          new THREE.BoxGeometry(1.2, 0.4, 0.1),
-          new THREE.MeshStandardMaterial({ color: zone.color }),
-        );
-        crossH.position.set(0, 1.4, 1.26);
-        bGroup.add(crossH);
-
-        const crossV = new THREE.Mesh(
-          new THREE.BoxGeometry(0.4, 1.2, 0.1),
-          new THREE.MeshStandardMaterial({ color: zone.color }),
-        );
-        crossV.position.set(0, 1.4, 1.26);
-        bGroup.add(crossV);
-      } else {
-        // Campus University Pillar
-        const base = new THREE.Mesh(
-          new THREE.BoxGeometry(2.2, 0.6, 2.2),
+        ledStrip.position.set(0.42, 1.1, 0);
+        sGroup.add(ledStrip);
+      } else if (zone.stationType === "radar") {
+        // Whale Predator: Cyber radar dish
+        const mast = new THREE.Mesh(
+          new THREE.CylinderGeometry(0.12, 0.18, 1.2, 8),
           new THREE.MeshStandardMaterial({ color: 0x475569 }),
         );
-        base.position.y = 0.3;
-        bGroup.add(base);
+        mast.position.y = 0.8;
+        sGroup.add(mast);
 
-        const cap = new THREE.Mesh(
-          new THREE.BoxGeometry(1.8, 0.2, 1.8),
+        const dish = new THREE.Mesh(
+          new THREE.ConeGeometry(0.9, 0.45, 16),
+          new THREE.MeshStandardMaterial({ color: zone.color, roughness: 0.2 }),
+        );
+        dish.position.set(0, 1.4, 0);
+        dish.rotation.x = Math.PI / 4;
+        dish.castShadow = true;
+        sGroup.add(dish);
+      } else if (zone.stationType === "clinic") {
+        // Klinik Pratama: Healthcare pillar with 3D Cross
+        const pillar = new THREE.Mesh(
+          new THREE.BoxGeometry(0.9, 1.4, 0.9),
+          new THREE.MeshStandardMaterial({ color: 0xffffff }),
+        );
+        pillar.position.y = 0.9;
+        pillar.castShadow = true;
+        sGroup.add(pillar);
+
+        const crossH = new THREE.Mesh(
+          new THREE.BoxGeometry(0.8, 0.25, 0.95),
           new THREE.MeshStandardMaterial({ color: zone.color }),
         );
-        cap.position.y = 2.4;
-        cap.rotation.y = Math.PI / 4;
-        bGroup.add(cap);
+        crossH.position.y = 1.1;
+        sGroup.add(crossH);
 
-        const pillar = new THREE.Mesh(
-          new THREE.CylinderGeometry(0.3, 0.3, 1.8, 8),
+        const crossV = new THREE.Mesh(
+          new THREE.BoxGeometry(0.25, 0.8, 0.95),
+          new THREE.MeshStandardMaterial({ color: zone.color }),
+        );
+        crossV.position.y = 1.1;
+        sGroup.add(crossV);
+      } else {
+        // Campus UNSAP: Degree pedestal with graduation cap
+        const col = new THREE.Mesh(
+          new THREE.CylinderGeometry(0.4, 0.45, 1.3, 16),
           new THREE.MeshStandardMaterial({ color: 0xe2e8f0 }),
         );
-        pillar.position.y = 1.3;
-        bGroup.add(pillar);
+        col.position.y = 0.85;
+        col.castShadow = true;
+        sGroup.add(col);
+
+        const cap = new THREE.Mesh(
+          new THREE.BoxGeometry(0.9, 0.12, 0.9),
+          new THREE.MeshStandardMaterial({ color: zone.color }),
+        );
+        cap.position.y = 1.55;
+        cap.rotation.y = Math.PI / 4;
+        sGroup.add(cap);
       }
 
-      scene.add(bGroup);
+      // Floating Hologram Diamond above kiosk
+      const diamond = new THREE.Mesh(
+        new THREE.OctahedronGeometry(0.3, 0),
+        new THREE.MeshStandardMaterial({
+          color: zone.color,
+          emissive: zone.color,
+          emissiveIntensity: 0.5,
+          roughness: 0.1,
+        }),
+      );
+      diamond.position.y = 2.4;
+      sGroup.add(diamond);
+
+      scene.add(sGroup);
     });
 
-    // --- PLAYER CHARACTER (LOW-POLY ROBOT/DEV AVATAR) ---
-    const player = new THREE.Group();
-    player.position.set(0, 0, 0);
+    // --- PROCEDURAL 3D ROBOT DOG: BOLT (THE STAR COMPANION) ---
+    const bolt = new THREE.Group();
+    bolt.position.set(0, 0, 1);
 
-    // Body
-    const bodyGeo = new THREE.CapsuleGeometry(0.4, 0.6, 8, 12);
+    // 1. Chassis / Torso
     const bodyMat = new THREE.MeshStandardMaterial({
-      color: 0x0284c7,
-      roughness: 0.3,
-      metalness: 0.2,
+      color: 0xf8fafc, // Clean ceramic white
+      roughness: 0.25,
+      metalness: 0.15,
     });
+    const darkAccentMat = new THREE.MeshStandardMaterial({
+      color: 0x1e293b, // Dark graphite joints
+      roughness: 0.4,
+    });
+    const cyanLedMat = new THREE.MeshBasicMaterial({
+      color: 0x22d3ee, // Glowing cyan visor/accent
+    });
+
+    // Body Core
+    const bodyGeo = new THREE.BoxGeometry(0.85, 0.55, 1.25);
     const bodyMesh = new THREE.Mesh(bodyGeo, bodyMat);
-    bodyMesh.position.y = 0.9;
+    bodyMesh.position.y = 0.75;
     bodyMesh.castShadow = true;
-    player.add(bodyMesh);
+    bolt.add(bodyMesh);
 
-    // Head
-    const headGeo = new THREE.SphereGeometry(0.35, 16, 16);
-    const headMat = new THREE.MeshStandardMaterial({
-      color: 0xffffff,
-      roughness: 0.2,
+    // Spine Spine Cyber Strip
+    const spineGeo = new THREE.BoxGeometry(0.2, 0.08, 1.05);
+    const spine = new THREE.Mesh(spineGeo, darkAccentMat);
+    spine.position.set(0, 1.05, 0);
+    bolt.add(spine);
+
+    // 2. Neck & Head
+    const neck = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.18, 0.22, 0.35, 12),
+      darkAccentMat,
+    );
+    neck.position.set(0, 0.95, 0.6);
+    neck.rotation.x = 0.4;
+    bolt.add(neck);
+
+    const headGroup = new THREE.Group();
+    headGroup.position.set(0, 1.15, 0.75);
+
+    // Head Unit
+    const headBox = new THREE.Mesh(
+      new THREE.BoxGeometry(0.65, 0.45, 0.6),
+      bodyMat,
+    );
+    headBox.castShadow = true;
+    headGroup.add(headBox);
+
+    // Glossy Dark Visor Faceplate
+    const visorFace = new THREE.Mesh(
+      new THREE.BoxGeometry(0.55, 0.28, 0.08),
+      new THREE.MeshStandardMaterial({
+        color: 0x090d16,
+        roughness: 0.05,
+      }),
+    );
+    visorFace.position.set(0, 0.02, 0.31);
+    headGroup.add(visorFace);
+
+    // Glowing Cyan Digital Eyes [ ●   ● ]
+    const leftEye = new THREE.Mesh(
+      new THREE.BoxGeometry(0.14, 0.08, 0.02),
+      cyanLedMat,
+    );
+    leftEye.position.set(-0.16, 0.03, 0.36);
+    headGroup.add(leftEye);
+
+    const rightEye = new THREE.Mesh(
+      new THREE.BoxGeometry(0.14, 0.08, 0.02),
+      cyanLedMat,
+    );
+    rightEye.position.set(0.16, 0.03, 0.36);
+    headGroup.add(rightEye);
+
+    // Cute Robotic Antenna Ears
+    const earGeo = new THREE.ConeGeometry(0.1, 0.35, 4);
+    const leftEar = new THREE.Mesh(earGeo, darkAccentMat);
+    leftEar.position.set(-0.32, 0.3, -0.05);
+    leftEar.rotation.z = -0.4;
+    headGroup.add(leftEar);
+
+    const rightEar = new THREE.Mesh(earGeo, darkAccentMat);
+    rightEar.position.set(0.32, 0.3, -0.05);
+    rightEar.rotation.z = 0.4;
+    headGroup.add(rightEar);
+
+    bolt.add(headGroup);
+
+    // 3. Wagging Tail
+    const tailGroup = new THREE.Group();
+    tailGroup.position.set(0, 0.9, -0.6);
+
+    const tailStem = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.04, 0.06, 0.5, 8),
+      darkAccentMat,
+    );
+    tailStem.position.set(0, 0.2, -0.15);
+    tailStem.rotation.x = -0.7;
+    tailGroup.add(tailStem);
+
+    const tailTip = new THREE.Mesh(
+      new THREE.SphereGeometry(0.08, 8, 8),
+      cyanLedMat,
+    );
+    tailTip.position.set(0, 0.4, -0.32);
+    tailGroup.add(tailTip);
+    bolt.add(tailGroup);
+
+    // 4. Four Articulated Quadruped Legs: FL, FR, BL, BR
+    interface LegRig {
+      group: THREE.Group;
+      upper: THREE.Mesh;
+      lower: THREE.Mesh;
+      paw: THREE.Mesh;
+      baseX: number;
+      baseZ: number;
+    }
+
+    const legs: LegRig[] = [];
+    const legPositions: [number, number, string][] = [
+      [-0.45, 0.42, "FL"],
+      [0.45, 0.42, "FR"],
+      [-0.45, -0.42, "BL"],
+      [0.45, -0.42, "BR"],
+    ];
+
+    legPositions.forEach(([lx, lz]) => {
+      const legPivot = new THREE.Group();
+      legPivot.position.set(lx, 0.65, lz);
+
+      // Shoulder Hip
+      const hip = new THREE.Mesh(
+        new THREE.SphereGeometry(0.14, 12, 12),
+        darkAccentMat,
+      );
+      legPivot.add(hip);
+
+      // Upper Leg
+      const upperLeg = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.08, 0.07, 0.35, 8),
+        bodyMat,
+      );
+      upperLeg.position.set(0, -0.18, 0);
+      upperLeg.castShadow = true;
+      legPivot.add(upperLeg);
+
+      // Knee Joint
+      const knee = new THREE.Mesh(
+        new THREE.SphereGeometry(0.09, 8, 8),
+        darkAccentMat,
+      );
+      knee.position.set(0, -0.35, 0);
+      legPivot.add(knee);
+
+      // Lower Leg & Paw
+      const lowerLeg = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.06, 0.06, 0.3, 8),
+        darkAccentMat,
+      );
+      lowerLeg.position.set(0, -0.5, 0);
+      legPivot.add(lowerLeg);
+
+      // Rubber Foot Paw
+      const paw = new THREE.Mesh(
+        new THREE.CapsuleGeometry(0.09, 0.12, 4, 8),
+        darkAccentMat,
+      );
+      paw.position.set(0, -0.65, 0.04);
+      paw.rotation.x = Math.PI / 2;
+      paw.castShadow = true;
+      legPivot.add(paw);
+
+      bolt.add(legPivot);
+      legs.push({
+        group: legPivot,
+        upper: upperLeg,
+        lower: lowerLeg,
+        paw: paw,
+        baseX: lx,
+        baseZ: lz,
+      });
     });
-    const headMesh = new THREE.Mesh(headGeo, headMat);
-    headMesh.position.y = 1.6;
-    headMesh.castShadow = true;
-    player.add(headMesh);
 
-    // Visor / Eyes
-    const visorGeo = new THREE.BoxGeometry(0.4, 0.15, 0.2);
-    const visorMat = new THREE.MeshStandardMaterial({
-      color: 0x0f172a,
-      roughness: 0.1,
-    });
-    const visor = new THREE.Mesh(visorGeo, visorMat);
-    visor.position.set(0, 1.6, 0.26);
-    player.add(visor);
-
-    // Cyan glowing visor light
-    const eyeLight = new THREE.Mesh(
-      new THREE.BoxGeometry(0.32, 0.08, 0.05),
-      new THREE.MeshBasicMaterial({ color: 0x38bdf8 }),
-    );
-    eyeLight.position.set(0, 1.6, 0.35);
-    player.add(eyeLight);
-
-    // Little Antenna
-    const antPole = new THREE.Mesh(
-      new THREE.CylinderGeometry(0.04, 0.04, 0.3, 8),
-      new THREE.MeshStandardMaterial({ color: 0x64748b }),
-    );
-    antPole.position.set(0, 2.05, 0);
-    player.add(antPole);
-
-    const antTip = new THREE.Mesh(
-      new THREE.SphereGeometry(0.1, 8, 8),
-      new THREE.MeshBasicMaterial({ color: 0x10b981 }),
-    );
-    antTip.position.set(0, 2.25, 0);
-    player.add(antTip);
-
-    // Player Shadow Blob
-    const shadowGeo = new THREE.CircleGeometry(0.5, 16);
+    // Shadow Blob under Bolt
+    const shadowGeo = new THREE.CircleGeometry(0.65, 24);
     const shadowMat = new THREE.MeshBasicMaterial({
       color: 0x94a3b8,
       transparent: true,
-      opacity: 0.4,
+      opacity: 0.35,
     });
-    const pShadow = new THREE.Mesh(shadowGeo, shadowMat);
-    pShadow.rotation.x = -Math.PI / 2;
-    pShadow.position.y = 0.03;
-    player.add(pShadow);
+    const boltShadow = new THREE.Mesh(shadowGeo, shadowMat);
+    boltShadow.rotation.x = -Math.PI / 2;
+    boltShadow.position.y = 0.03;
+    bolt.add(boltShadow);
 
-    scene.add(player);
+    scene.add(bolt);
 
-    // --- INPUT CONTROLS ---
+    // --- CONTROLS & INTERACTION STATE ---
     const keys: Record<string, boolean> = {
       up: false,
       down: false,
       left: false,
       right: false,
+      shift: false,
       space: false,
     };
 
+    // Third-person Orbit Camera Parameters
+    let isDragging = false;
+    let prevMouse = { x: 0, y: 0 };
+    let orbitYaw = 0; // Horizontal orbit around Bolt
+    let orbitPitch = 0.42; // Vertical elevation (~24 deg)
+    let orbitDistance = 11.5; // Distance from Bolt
+
+    const handlePointerDown = (e: MouseEvent | TouchEvent) => {
+      isDragging = true;
+      const clientX = "touches" in e ? e.touches[0].clientX : e.clientX;
+      const clientY = "touches" in e ? e.touches[0].clientY : e.clientY;
+      prevMouse = { x: clientX, y: clientY };
+    };
+
+    const handlePointerMove = (e: MouseEvent | TouchEvent) => {
+      if (!isDragging) return;
+      const clientX = "touches" in e ? e.touches[0].clientX : e.clientX;
+      const clientY = "touches" in e ? e.touches[0].clientY : e.clientY;
+
+      const deltaX = clientX - prevMouse.x;
+      const deltaY = clientY - prevMouse.y;
+
+      orbitYaw -= deltaX * 0.006;
+      orbitPitch = Math.max(0.12, Math.min(1.2, orbitPitch + deltaY * 0.005));
+
+      prevMouse = { x: clientX, y: clientY };
+    };
+
+    const handlePointerUp = () => {
+      isDragging = false;
+    };
+
+    const handleWheel = (e: WheelEvent) => {
+      e.preventDefault();
+      orbitDistance = Math.max(
+        5.5,
+        Math.min(22, orbitDistance + e.deltaY * 0.015),
+      );
+    };
+
+    const dom = renderer.domElement;
+    dom.addEventListener("mousedown", handlePointerDown);
+    window.addEventListener("mousemove", handlePointerMove);
+    window.addEventListener("mouseup", handlePointerUp);
+    dom.addEventListener("wheel", handleWheel, { passive: false });
+
+    // Keyboard Listeners
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.code === "KeyW" || e.code === "ArrowUp") keys.up = true;
       if (e.code === "KeyS" || e.code === "ArrowDown") keys.down = true;
       if (e.code === "KeyA" || e.code === "ArrowLeft") keys.left = true;
       if (e.code === "KeyD" || e.code === "ArrowRight") keys.right = true;
-      if (e.code === "Space" || e.code === "KeyE") {
+      if (e.code === "ShiftLeft" || e.code === "ShiftRight") keys.shift = true;
+      if (e.code === "Space") {
         keys.space = true;
-        // Trigger action
+        // Jump Bolt
+        if (boltVerticalVel === 0 && boltYPos <= 0.05) {
+          boltVerticalVel = 9.5;
+          playSound("jump");
+        }
+      }
+      if (e.code === "KeyE") {
         if (nearZoneRef.current) {
           triggerOpenZone(nearZoneRef.current);
         }
@@ -567,27 +976,40 @@ export default function PortfolioGame() {
       if (e.code === "KeyS" || e.code === "ArrowDown") keys.down = false;
       if (e.code === "KeyA" || e.code === "ArrowLeft") keys.left = false;
       if (e.code === "KeyD" || e.code === "ArrowRight") keys.right = false;
-      if (e.code === "Space" || e.code === "KeyE") keys.space = false;
+      if (e.code === "ShiftLeft" || e.code === "ShiftRight") keys.shift = false;
+      if (e.code === "Space") keys.space = false;
     };
 
     window.addEventListener("keydown", handleKeyDown);
     window.addEventListener("keyup", handleKeyUp);
 
-    // Touch Joystick Virtual State
-    const touchMove = { x: 0, y: 0 };
+    // Mobile touch virtual joystick
+    const touchMove = { x: 0, y: 0, sprint: false, jump: false };
     (
       window as unknown as {
-        __setTouchJoystick?: (x: number, y: number) => void;
+        __setTouchControls?: (
+          dx: number,
+          dy: number,
+          sprint?: boolean,
+          jump?: boolean,
+        ) => void;
       }
-    ).__setTouchJoystick = (x, y) => {
-      touchMove.x = x;
-      touchMove.y = y;
+    ).__setTouchControls = (dx, dy, sprint, jump) => {
+      touchMove.x = dx;
+      touchMove.y = dy;
+      touchMove.sprint = !!sprint;
+      if (jump && boltVerticalVel === 0 && boltYPos <= 0.05) {
+        boltVerticalVel = 9.5;
+        playSound("jump");
+      }
     };
 
-    // State refs for animation loop
-    const nearZoneRef = { current: null as ZoneData | null };
-    let walkCycle = 0;
+    // Physics & Animation Loop Variables
+    let boltYPos = 0;
+    let boltVerticalVel = 0;
+    let walkPhase = 0;
     let stepSoundTimer = 0;
+    const nearZoneRef = { current: null as ZoneData | null };
 
     const triggerOpenZone = (zone: ZoneData) => {
       setActiveZone(zone);
@@ -607,102 +1029,239 @@ export default function PortfolioGame() {
     // --- ANIMATION / GAME LOOP ---
     let reqId: number;
     let clock = new THREE.Clock();
+    let frameCount = 0;
+    let lastFpsUpdate = performance.now();
 
     const animate = () => {
       reqId = requestAnimationFrame(animate);
-      const delta = Math.min(clock.getDelta(), 0.1);
-
-      // Pulse zone rings
+      const delta = Math.min(clock.getDelta(), 0.08);
       const time = clock.getElapsedTime();
-      zoneRings.forEach((ring, i) => {
-        const scale = 1 + Math.sin(time * 3 + i) * 0.08;
-        ring.scale.set(scale, scale, 1);
-      });
 
-      // Movement vector calculation
-      let dx = 0;
-      let dz = 0;
-
-      if (keys.up) dz -= 1;
-      if (keys.down) dz += 1;
-      if (keys.left) dx -= 1;
-      if (keys.right) dx += 1;
-
-      // Add touch joystick input
-      if (touchMove.x !== 0 || touchMove.y !== 0) {
-        dx += touchMove.x;
-        dz += touchMove.y;
+      // FPS Counter calculation
+      frameCount++;
+      const nowMs = performance.now();
+      if (nowMs - lastFpsUpdate >= 1000) {
+        setFps(Math.round((frameCount * 1000) / (nowMs - lastFpsUpdate)));
+        frameCount = 0;
+        lastFpsUpdate = nowMs;
       }
 
-      const speed = 7.5; // Walk speed
-      const isMoving = dx !== 0 || dz !== 0;
+      // 1. Station Discs & Hologram Diamonds Pulse
+      stationRings.forEach((ring, i) => {
+        const sc = 1 + Math.sin(time * 3 + i) * 0.08;
+        ring.scale.set(sc, sc, 1);
+      });
+
+      // 2. Bolt Movement Input & Camera-Relative Direction
+      let inputX = 0;
+      let inputZ = 0;
+
+      if (keys.up) inputZ -= 1;
+      if (keys.down) inputZ += 1;
+      if (keys.left) inputX -= 1;
+      if (keys.right) inputX += 1;
+
+      if (touchMove.x !== 0 || touchMove.y !== 0) {
+        inputX += touchMove.x;
+        inputZ += touchMove.y;
+      }
+
+      const isSprinting = keys.shift || touchMove.sprint;
+      const speed = isSprinting ? 12.5 : 6.8;
+      const isMoving = inputX !== 0 || inputZ !== 0;
+
+      if (boltVerticalVel > 0 || boltYPos > 0.05) {
+        setBoltState("jumping");
+      } else if (isMoving) {
+        setBoltState(isSprinting ? "sprinting" : "walking");
+      } else {
+        setBoltState("idle");
+      }
 
       if (isMoving) {
-        const moveVec = new THREE.Vector2(dx, dz).normalize();
-        player.position.x += moveVec.x * speed * delta;
-        player.position.z += moveVec.y * speed * delta;
+        // Calculate camera-relative movement vector
+        const forward = new THREE.Vector3(
+          -Math.sin(orbitYaw),
+          0,
+          -Math.cos(orbitYaw),
+        ).normalize();
+        const right = new THREE.Vector3(
+          Math.cos(orbitYaw),
+          0,
+          -Math.sin(orbitYaw),
+        ).normalize();
 
-        // Island boundaries (radius ~15.5)
-        const distFromCenter = Math.sqrt(
-          player.position.x ** 2 + player.position.z ** 2,
+        const moveDir = new THREE.Vector3()
+          .addScaledVector(forward, -inputZ)
+          .addScaledVector(right, inputX)
+          .normalize();
+
+        bolt.position.x += moveDir.x * speed * delta;
+        bolt.position.z += moveDir.z * speed * delta;
+
+        // Smoothly face movement direction
+        const targetRotY = Math.atan2(moveDir.x, moveDir.z);
+        bolt.rotation.y = THREE.MathUtils.lerp(
+          bolt.rotation.y,
+          targetRotY,
+          0.22,
         );
-        if (distFromCenter > 15.5) {
-          player.position.x = (player.position.x / distFromCenter) * 15.5;
-          player.position.z = (player.position.z / distFromCenter) * 15.5;
-        }
 
-        // Face movement direction
-        const targetAngle = Math.atan2(moveVec.x, moveVec.y);
-        player.rotation.y = THREE.MathUtils.lerp(
-          player.rotation.y,
-          targetAngle,
-          0.25,
-        );
+        // Quadruped Trot Gait Animation
+        const gaitSpeed = isSprinting ? 22 : 12;
+        walkPhase += delta * gaitSpeed;
+        const swing = Math.sin(walkPhase) * (isSprinting ? 0.65 : 0.45);
 
-        // Walking bob effect
-        walkCycle += delta * 15;
-        bodyMesh.position.y = 0.9 + Math.abs(Math.sin(walkCycle)) * 0.12;
+        // Diagonal leg synchronization (FL & BR pair vs FR & BL pair)
+        legs[0].group.rotation.x = swing; // FL
+        legs[3].group.rotation.x = swing; // BR
+        legs[1].group.rotation.x = -swing; // FR
+        legs[2].group.rotation.x = -swing; // BL
 
+        // Vertical body bounce during trot
+        bodyMesh.position.y = 0.75 + Math.abs(Math.sin(walkPhase)) * 0.09;
+        headGroup.position.y = 1.15 + Math.abs(Math.sin(walkPhase)) * 0.06;
+
+        // Tail wag during movement
+        tailGroup.rotation.y = Math.sin(time * 14) * 0.45;
+
+        // Audio footstep ticker
         stepSoundTimer += delta;
-        if (stepSoundTimer > 0.35) {
+        if (stepSoundTimer > (isSprinting ? 0.2 : 0.35)) {
           playSound("step");
           stepSoundTimer = 0;
         }
       } else {
-        // Idle breathing
-        bodyMesh.position.y = 0.9 + Math.sin(time * 2) * 0.04;
+        // Idle Animation: Relaxed breathing, tail wag, reset legs
+        walkPhase = 0;
+        legs.forEach((leg) => {
+          leg.group.rotation.x = THREE.MathUtils.lerp(
+            leg.group.rotation.x,
+            0,
+            0.2,
+          );
+        });
+        bodyMesh.position.y = 0.75 + Math.sin(time * 2.5) * 0.03;
+        headGroup.position.y = 1.15 + Math.sin(time * 2.5) * 0.02;
+        tailGroup.rotation.y = Math.sin(time * 3.5) * 0.2;
       }
 
-      // Smooth Camera follow (Lerp)
-      const targetCamX = player.position.x;
-      const targetCamZ = player.position.z + 18;
-      const targetCamY = 16;
+      // Jump Physics (Gravity & Floor/Ramp Height)
+      if (boltVerticalVel !== 0 || boltYPos > 0) {
+        boltYPos += boltVerticalVel * delta;
+        boltVerticalVel -= 28 * delta; // Gravity
+        if (boltYPos <= 0) {
+          boltYPos = 0;
+          boltVerticalVel = 0;
+        }
+      }
 
-      camera.position.x = THREE.MathUtils.lerp(
-        camera.position.x,
-        targetCamX,
-        0.08,
+      // Playroom Room Boundaries (R = 15.5m)
+      const distFromCenter = Math.sqrt(
+        bolt.position.x ** 2 + bolt.position.z ** 2,
       );
-      camera.position.y = THREE.MathUtils.lerp(
-        camera.position.y,
-        targetCamY,
-        0.08,
-      );
-      camera.position.z = THREE.MathUtils.lerp(
-        camera.position.z,
-        targetCamZ,
-        0.08,
-      );
-      camera.lookAt(player.position.x, 1, player.position.z);
+      if (distFromCenter > 15.2) {
+        bolt.position.x = (bolt.position.x / distFromCenter) * 15.2;
+        bolt.position.z = (bolt.position.z / distFromCenter) * 15.2;
+      }
 
-      // Check Proximity to Zones
+      // Check Ramp Height (If Bolt is on the platform/ramp)
+      let groundHeight = 0;
+      if (
+        bolt.position.x > -14.5 &&
+        bolt.position.x < -7.5 &&
+        bolt.position.z > -10.5 &&
+        bolt.position.z < -5.5
+      ) {
+        // On elevated wooden platform
+        groundHeight = 1.4;
+      }
+      bolt.position.y = groundHeight + boltYPos;
+
+      // 3. Interactive Tennis Ball Physics & Bolt Kick Collision
+      // Ball velocity & position update
+      ballPos.x += ballVel.x * delta;
+      ballPos.y += ballVel.y * delta;
+      ballPos.z += ballVel.z * delta;
+
+      // Ball gravity
+      if (ballPos.y > ballRadius) {
+        ballVel.y -= 24 * delta;
+      } else {
+        ballPos.y = ballRadius;
+        if (Math.abs(ballVel.y) > 0.8) {
+          ballVel.y = -ballVel.y * 0.45; // Bounce
+        } else {
+          ballVel.y = 0;
+        }
+      }
+
+      // Friction damping
+      ballVel.x *= 0.965;
+      ballVel.z *= 0.965;
+
+      // Ball rolling rotation based on velocity
+      const ballSpeed = Math.sqrt(ballVel.x ** 2 + ballVel.z ** 2);
+      if (ballSpeed > 0.05) {
+        ballMesh.rotation.x += (ballVel.z / ballRadius) * delta;
+        ballMesh.rotation.z -= (ballVel.x / ballRadius) * delta;
+      }
+
+      // Ball boundary bounce off room walls
+      const ballDistCenter = Math.sqrt(ballPos.x ** 2 + ballPos.z ** 2);
+      if (ballDistCenter > 15.2) {
+        ballPos.x = (ballPos.x / ballDistCenter) * 15.2;
+        ballPos.z = (ballPos.z / ballDistCenter) * 15.2;
+        ballVel.x = -ballVel.x * 0.6;
+        ballVel.z = -ballVel.z * 0.6;
+      }
+
+      // Bolt collision with Ball (Kick mechanic)
+      const boltPos2D = new THREE.Vector2(bolt.position.x, bolt.position.z);
+      const ballPos2D = new THREE.Vector2(ballPos.x, ballPos.z);
+      const distToBall = boltPos2D.distanceTo(ballPos2D);
+      const collisionThreshold = 0.85;
+
+      if (distToBall < collisionThreshold) {
+        const kickDir = ballPos2D.clone().sub(boltPos2D).normalize();
+        const kickPower = isSprinting ? 14 : 7.5;
+        ballVel.x = kickDir.x * kickPower;
+        ballVel.z = kickDir.y * kickPower;
+        ballVel.y = 2.4; // Small pop hop
+        playSound("ball");
+
+        // Push ball outside collision threshold
+        ballPos.x = bolt.position.x + kickDir.x * collisionThreshold;
+        ballPos.z = bolt.position.z + kickDir.y * collisionThreshold;
+      }
+
+      ballMesh.position.copy(ballPos);
+
+      // 4. Smooth Third-Person Orbit Camera Follow
+      const targetFocus = new THREE.Vector3(
+        bolt.position.x,
+        bolt.position.y + 0.8,
+        bolt.position.z,
+      );
+
+      const camOffset = new THREE.Vector3(
+        Math.sin(orbitYaw) * Math.cos(orbitPitch) * orbitDistance,
+        Math.sin(orbitPitch) * orbitDistance,
+        Math.cos(orbitYaw) * Math.cos(orbitPitch) * orbitDistance,
+      );
+
+      const targetCamPos = targetFocus.clone().add(camOffset);
+      camera.position.lerp(targetCamPos, 0.1);
+      camera.lookAt(targetFocus);
+
+      // 5. Proximity Detection to Project Stations
       let foundNear: ZoneData | null = null;
       ZONES.forEach((zone) => {
         const [zx, , zz] = zone.position;
         const d = Math.sqrt(
-          (player.position.x - zx) ** 2 + (player.position.z - zz) ** 2,
+          (bolt.position.x - zx) ** 2 + (bolt.position.z - zz) ** 2,
         );
-        if (d < 3.0) {
+        if (d < 3.2) {
           foundNear = zone;
         }
       });
@@ -715,12 +1274,91 @@ export default function PortfolioGame() {
         setNearZone(foundNear);
       }
 
+      // 6. Draw Mini-Map (Live Radar in Bottom Right)
+      if (miniMapCanvasRef.current) {
+        const canvas = miniMapCanvasRef.current;
+        const ctx = canvas.getContext("2d");
+        if (ctx) {
+          const mapSize = canvas.width;
+          const mapCenter = mapSize / 2;
+          const mapScale = (mapSize / 34) * 0.9;
+
+          ctx.clearRect(0, 0, mapSize, mapSize);
+
+          // Room boundary circle
+          ctx.beginPath();
+          ctx.arc(mapCenter, mapCenter, 15.2 * mapScale, 0, Math.PI * 2);
+          ctx.fillStyle = "rgba(241, 245, 249, 0.85)";
+          ctx.fill();
+          ctx.lineWidth = 1.5;
+          ctx.strokeStyle = "#cbd5e1";
+          ctx.stroke();
+
+          // Terracotta ring path
+          ctx.beginPath();
+          ctx.arc(
+            mapCenter,
+            mapCenter - 1 * mapScale,
+            6 * mapScale,
+            0,
+            Math.PI * 2,
+          );
+          ctx.lineWidth = 4 * mapScale;
+          ctx.strokeStyle = "rgba(224, 122, 95, 0.35)";
+          ctx.stroke();
+
+          // Stations dots
+          ZONES.forEach((zone) => {
+            const [zx, , zz] = zone.position;
+            const sx = mapCenter + zx * mapScale;
+            const sy = mapCenter + zz * mapScale;
+
+            ctx.beginPath();
+            ctx.arc(sx, sy, 4.5, 0, Math.PI * 2);
+            ctx.fillStyle = zone.hexColor;
+            ctx.fill();
+            ctx.lineWidth = 1.5;
+            ctx.strokeStyle = "#ffffff";
+            ctx.stroke();
+          });
+
+          // Tennis ball dot
+          const bx = mapCenter + ballPos.x * mapScale;
+          const by = mapCenter + ballPos.z * mapScale;
+          ctx.beginPath();
+          ctx.arc(bx, by, 3.5, 0, Math.PI * 2);
+          ctx.fillStyle = "#84cc16";
+          ctx.fill();
+
+          // Bolt Player Dot & Heading Indicator
+          const px = mapCenter + bolt.position.x * mapScale;
+          const py = mapCenter + bolt.position.z * mapScale;
+
+          // Heading cone/arrow
+          ctx.save();
+          ctx.translate(px, py);
+          ctx.rotate(bolt.rotation.y);
+
+          ctx.beginPath();
+          ctx.moveTo(0, 7);
+          ctx.lineTo(-4, -4);
+          ctx.lineTo(4, -4);
+          ctx.closePath();
+          ctx.fillStyle = "#0284c7";
+          ctx.fill();
+          ctx.lineWidth = 1.5;
+          ctx.strokeStyle = "#ffffff";
+          ctx.stroke();
+
+          ctx.restore();
+        }
+      }
+
       renderer.render(scene, camera);
     };
 
     animate();
 
-    // Resize Handler
     const handleResize = () => {
       if (!container) return;
       const w = container.clientWidth;
@@ -733,6 +1371,10 @@ export default function PortfolioGame() {
     window.addEventListener("resize", handleResize);
 
     return () => {
+      dom.removeEventListener("mousedown", handlePointerDown);
+      window.removeEventListener("mousemove", handlePointerMove);
+      window.removeEventListener("mouseup", handlePointerUp);
+      dom.removeEventListener("wheel", handleWheel);
       window.removeEventListener("keydown", handleKeyDown);
       window.removeEventListener("keyup", handleKeyUp);
       window.removeEventListener("resize", handleResize);
@@ -741,15 +1383,16 @@ export default function PortfolioGame() {
         container.removeChild(renderer.domElement);
       }
       renderer.dispose();
-      delete (window as unknown as { __setTouchJoystick?: unknown })
-        .__setTouchJoystick;
+      delete (window as unknown as { __setTouchControls?: unknown })
+        .__setTouchControls;
     };
   }, [audioEnabled]);
 
-  // Touch Virtual Joystick Handlers for Mobile
+  // Virtual Touch Joystick for Mobile
   const joystickRef = useRef<HTMLDivElement>(null);
   const [touchActive, setTouchActive] = useState(false);
   const [knobPos, setKnobPos] = useState({ x: 0, y: 0 });
+  const [isMobileSprinting, setIsMobileSprinting] = useState(false);
 
   const handleTouchStart = (e: React.TouchEvent) => {
     setTouchActive(true);
@@ -779,10 +1422,15 @@ export default function PortfolioGame() {
     const normY = deltaY / maxRadius;
     const setter = (
       window as unknown as {
-        __setTouchJoystick?: (x: number, y: number) => void;
+        __setTouchControls?: (
+          dx: number,
+          dy: number,
+          sprint?: boolean,
+          jump?: boolean,
+        ) => void;
       }
-    ).__setTouchJoystick;
-    if (setter) setter(normX, normY);
+    ).__setTouchControls;
+    if (setter) setter(normX, normY, isMobileSprinting, false);
   };
 
   const handleTouchEnd = () => {
@@ -790,61 +1438,116 @@ export default function PortfolioGame() {
     setKnobPos({ x: 0, y: 0 });
     const setter = (
       window as unknown as {
-        __setTouchJoystick?: (x: number, y: number) => void;
+        __setTouchControls?: (
+          dx: number,
+          dy: number,
+          sprint?: boolean,
+          jump?: boolean,
+        ) => void;
       }
-    ).__setTouchJoystick;
-    if (setter) setter(0, 0);
+    ).__setTouchControls;
+    if (setter) setter(0, 0, isMobileSprinting, false);
+  };
+
+  const handleMobileJump = () => {
+    const setter = (
+      window as unknown as {
+        __setTouchControls?: (
+          dx: number,
+          dy: number,
+          sprint?: boolean,
+          jump?: boolean,
+        ) => void;
+      }
+    ).__setTouchControls;
+    if (setter) setter(knobPos.x / 50, knobPos.y / 50, isMobileSprinting, true);
   };
 
   return (
-    <div className="relative w-full h-[100dvh] overflow-hidden bg-slate-900 select-none">
-      {/* 3D WebGL Canvas Mount */}
+    <div className="fixed inset-0 z-50 w-screen h-screen overflow-hidden bg-[#f6f1eb] select-none font-sans">
+      {/* 3D WebGL Canvas */}
       <div
         ref={mountRef}
         className="w-full h-full cursor-grab active:cursor-grabbing"
       />
 
-      {/* Top Game Bar HUD */}
-      <header className="absolute top-4 left-4 right-4 z-20 flex items-center justify-between pointer-events-none">
-        <div className="flex items-center gap-2 pointer-events-auto">
-          <Link
-            href="/"
-            className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white/90 text-slate-800 text-xs sm:text-sm font-bold shadow-md hover:bg-white transition-all backdrop-blur-md border border-slate-200 min-h-[44px]"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            <span>Kembali ke Portofolio</span>
-          </Link>
-
-          <button
-            onClick={() => setAudioEnabled(!audioEnabled)}
-            aria-label="Toggle Sound"
-            className="p-2.5 rounded-xl bg-white/90 text-slate-700 hover:text-blue-600 shadow-md backdrop-blur-md border border-slate-200 transition-all cursor-pointer min-h-[44px] min-w-[44px] flex items-center justify-center"
-          >
-            {audioEnabled ? (
-              <Volume2 className="w-5 h-5 text-blue-600" />
-            ) : (
-              <VolumeX className="w-5 h-5 text-slate-400" />
-            )}
-          </button>
-        </div>
-
-        {/* Progress Quest Box */}
-        <div className="pointer-events-auto bg-white/90 backdrop-blur-md border border-slate-200 px-3.5 py-2 rounded-xl shadow-md flex items-center gap-3">
-          <Trophy className="w-4 h-4 text-amber-500" />
-          <div className="text-right">
-            <div className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
-              Eksplorasi
+      {/* TOP LEFT: Brand Logo & Title (Matching Dea Afrizal's video: ROAM. ROBOT DOG SANCTUARY) */}
+      <header className="absolute top-5 left-5 z-20 flex flex-col pointer-events-auto">
+        <div className="flex items-center gap-2.5">
+          <div className="w-8 h-8 rounded-xl bg-slate-900 text-white flex items-center justify-center font-black text-sm shadow-md">
+            🐾
+          </div>
+          <div>
+            <div className="text-xl font-black tracking-tight text-slate-900 leading-none">
+              ROAM.
             </div>
-            <div className="text-xs sm:text-sm font-extrabold text-slate-900">
-              {visitedZones.length} / {ZONES.length} Zona
+            <div className="text-[10px] font-extrabold uppercase tracking-widest text-slate-500 mt-0.5">
+              ROBOT DOG SANCTUARY
             </div>
           </div>
         </div>
       </header>
 
-      {/* Near Zone Action Prompt */}
+      {/* TOP RIGHT: The Playroom 01 Badge + Audio + Return Link */}
+      <div className="absolute top-5 right-5 z-20 flex items-center gap-3 pointer-events-auto">
+        {/* Playroom Badge */}
+        <div className="flex items-center gap-2 px-3.5 py-2 rounded-full bg-white/80 backdrop-blur-md border border-slate-200/80 shadow-xs text-xs font-bold text-slate-800">
+          <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+          <span>THE PLAYROOM</span>
+          <span className="text-slate-400 font-mono text-[11px]">01</span>
+        </div>
+
+        {/* Audio FX Toggle */}
+        <button
+          onClick={() => setAudioEnabled(!audioEnabled)}
+          aria-label="Toggle Audio"
+          className="p-2.5 rounded-full bg-white/80 backdrop-blur-md border border-slate-200/80 shadow-xs hover:bg-white text-slate-700 transition cursor-pointer min-h-[40px] min-w-[40px] flex items-center justify-center"
+        >
+          {audioEnabled ? (
+            <Volume2 className="w-4 h-4 text-blue-600" />
+          ) : (
+            <VolumeX className="w-4 h-4 text-slate-400" />
+          )}
+        </button>
+
+        {/* Back to Portfolio */}
+        <Link
+          href="/"
+          className="flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-slate-900 text-white text-xs font-bold hover:bg-slate-800 transition shadow-sm min-h-[40px]"
+        >
+          <ArrowLeft className="w-3.5 h-3.5" />
+          <span className="hidden sm:inline">Portofolio</span>
+        </Link>
+      </div>
+
+      {/* FLOATING HERO TYPOGRAPHY (Matching Dea Afrizal's video aesthetic) */}
+      {showHeroBanner && (
+        <div className="absolute top-24 left-6 sm:left-10 z-10 pointer-events-auto max-w-sm space-y-2 select-none animate-in fade-in duration-500">
+          <div className="text-[11px] font-extrabold tracking-widest uppercase text-slate-400">
+            MADE FOR WANDERING
+          </div>
+          <h1 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight leading-none">
+            A little room.
+            <br />A big adventure.
+          </h1>
+          <p className="text-xs sm:text-sm text-slate-500 leading-relaxed font-medium">
+            Ajak Bolt berjalan mengelilingi playroom untuk menemukan ekosistem
+            proyek nyata &amp; domain resmi Pranata Pramudya.
+          </p>
+          <div className="pt-1 flex items-center gap-2">
+            <button
+              onClick={() => setShowHeroBanner(false)}
+              className="text-[11px] font-bold text-slate-400 hover:text-slate-700 underline cursor-pointer"
+            >
+              Sembunyikan teks panduan
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* PROXIMITY INTERACTION BANNER (Appears when Bolt is near a Station) */}
       {nearZone && !activeZone && (
-        <div className="absolute bottom-28 sm:bottom-12 left-1/2 -translate-x-1/2 z-20 pointer-events-auto animate-bounce">
+        <div className="absolute bottom-28 sm:bottom-20 left-1/2 -translate-x-1/2 z-30 pointer-events-auto animate-bounce">
           <button
             onClick={() => {
               setActiveZone(nearZone);
@@ -853,64 +1556,115 @@ export default function PortfolioGame() {
                 prev.includes(nearZone.id) ? prev : [...prev, nearZone.id],
               );
             }}
-            className="flex items-center gap-3 px-6 py-3.5 rounded-2xl bg-slate-950 text-white border-2 border-white/80 shadow-2xl hover:scale-105 transition-transform cursor-pointer font-bold text-sm sm:text-base min-h-[48px]"
+            className="flex items-center gap-3 px-6 py-3.5 rounded-2xl bg-slate-950 text-white border-2 shadow-2xl hover:scale-105 transition-all cursor-pointer font-bold text-sm min-h-[48px]"
             style={{ borderColor: nearZone.hexColor }}
           >
             <Sparkles
               className="w-5 h-5 animate-spin"
               style={{ color: nearZone.hexColor }}
             />
-            <span>Masuk ke {nearZone.title}</span>
+            <span>Periksa {nearZone.title}</span>
             <span className="text-[11px] px-2 py-0.5 rounded bg-white/20 font-mono">
-              [SPACE / TAP]
+              [SPACE / E / TAP]
             </span>
           </button>
         </div>
       )}
 
-      {/* Controls Helper (Desktop & Mobile) */}
-      {showControlsHint && (
-        <aside className="absolute top-20 left-4 z-10 pointer-events-auto max-w-xs bg-white/90 backdrop-blur-md p-3.5 rounded-2xl border border-slate-200 shadow-lg text-xs space-y-2 text-slate-700">
-          <div className="flex items-center justify-between font-bold text-slate-900">
-            <span className="flex items-center gap-1.5">
-              <Gamepad2 className="w-4 h-4 text-blue-600" />
-              Kontrol Simulator
+      {/* BOTTOM LEFT: YOUR COMPANION CARD (Direct replica from Dea Afrizal's video) */}
+      <div className="absolute bottom-6 left-6 z-20 pointer-events-auto">
+        <div className="bg-white/85 backdrop-blur-md rounded-2xl border border-slate-200/90 shadow-lg p-3.5 sm:p-4 min-w-[210px] sm:min-w-[240px] space-y-1">
+          <div className="flex items-center justify-between text-[10px] font-extrabold uppercase tracking-widest text-slate-400">
+            <span>YOUR COMPANION</span>
+            <span className="bg-slate-100 text-slate-700 px-1.5 py-0.5 rounded font-mono">
+              A-01
             </span>
-            <button
-              onClick={() => setShowControlsHint(false)}
-              className="text-slate-400 hover:text-slate-600 p-0.5"
-            >
-              <X className="w-3.5 h-3.5" />
-            </button>
           </div>
-          <div className="space-y-1 text-[11px] text-slate-600">
-            <p>
-              ⌨️ <strong>Keyboard:</strong> Tombol W/A/S/D atau Panah untuk
-              jalan.
-            </p>
-            <p>
-              📱 <strong>HP / Mobile:</strong> Gunakan Virtual Joystick di kiri
-              bawah.
-            </p>
-            <p>
-              🎯 <strong>Interaksi:</strong> Dekati bangunan dan tekan tombol
-              aksi.
-            </p>
+          <div className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight flex items-center justify-between">
+            <span>BOLT.</span>
+            <span className="text-xs font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full border border-blue-200">
+              {boltState}
+            </span>
           </div>
-        </aside>
-      )}
+          <p className="text-[11px] text-slate-500 font-medium">
+            Your curious little cyber companion
+          </p>
+          <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-[10px] font-bold text-slate-400">
+            <div className="flex items-center gap-1.5 text-slate-700">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
+              <span>Out exploring</span>
+            </div>
+            <div className="font-mono text-slate-400">{fps} fps</div>
+          </div>
+        </div>
+      </div>
 
-      {/* Mobile Virtual Joystick (Shown on touch screens) */}
-      <div className="lg:hidden absolute bottom-6 left-6 z-20 select-none touch-none">
+      {/* BOTTOM CENTER: KEYCAP CONTROLS BAR (Matching video: W A S D, Shift, Space, Drag, Scroll) */}
+      <div className="hidden md:flex absolute bottom-6 left-1/2 -translate-x-1/2 z-20 pointer-events-auto items-center gap-2 bg-white/85 backdrop-blur-md px-4 py-2.5 rounded-full border border-slate-200 shadow-md text-xs font-semibold text-slate-700">
+        <div className="flex items-center gap-1.5">
+          <span className="px-2 py-1 rounded-md bg-slate-100 border border-slate-300 font-mono text-[11px] font-bold">
+            W A S D
+          </span>
+          <span className="text-slate-500">Move</span>
+        </div>
+        <span className="text-slate-300">|</span>
+        <div className="flex items-center gap-1.5">
+          <span className="px-2 py-1 rounded-md bg-slate-100 border border-slate-300 font-mono text-[11px] font-bold">
+            Shift
+          </span>
+          <span className="text-slate-500">Sprint</span>
+        </div>
+        <span className="text-slate-300">|</span>
+        <div className="flex items-center gap-1.5">
+          <span className="px-2 py-1 rounded-md bg-slate-100 border border-slate-300 font-mono text-[11px] font-bold">
+            Space
+          </span>
+          <span className="text-slate-500">Jump / Kick</span>
+        </div>
+        <span className="text-slate-300">|</span>
+        <div className="flex items-center gap-1.5">
+          <span className="px-2 py-1 rounded-md bg-slate-100 border border-slate-300 font-mono text-[11px] font-bold">
+            Drag
+          </span>
+          <span className="text-slate-500">Orbit</span>
+        </div>
+        <span className="text-slate-300">|</span>
+        <div className="flex items-center gap-1.5">
+          <span className="px-2 py-1 rounded-md bg-slate-100 border border-slate-300 font-mono text-[11px] font-bold">
+            Scroll
+          </span>
+          <span className="text-slate-500">Zoom</span>
+        </div>
+      </div>
+
+      {/* BOTTOM RIGHT: CIRCULAR RADAR MINI-MAP (Matching Dea Afrizal's video mini-map) */}
+      <div className="absolute bottom-6 right-6 z-20 pointer-events-auto flex flex-col items-center">
+        <div className="relative w-28 h-28 sm:w-32 sm:h-32 rounded-full p-1 bg-white/85 backdrop-blur-md border border-slate-200/90 shadow-lg flex items-center justify-center">
+          <canvas
+            ref={miniMapCanvasRef}
+            width={128}
+            height={128}
+            className="w-full h-full rounded-full"
+          />
+          <div className="absolute bottom-1.5 text-[9px] font-bold text-slate-400 tracking-wider uppercase font-mono">
+            Sanctuary 01
+          </div>
+        </div>
+      </div>
+
+      {/* MOBILE CONTROLS (Joystick on Left, Sprint & Jump on Right) */}
+      <div className="md:hidden absolute bottom-24 left-6 z-20 touch-none select-none">
         <div
           ref={joystickRef}
           onTouchStart={handleTouchStart}
           onTouchMove={handleTouchMove}
           onTouchEnd={handleTouchEnd}
-          className="relative w-28 h-28 rounded-full bg-slate-900/60 border-2 border-white/50 backdrop-blur-sm shadow-xl flex items-center justify-center"
+          className="relative w-24 h-24 rounded-full bg-slate-900/60 border-2 border-white/60 backdrop-blur-sm flex items-center justify-center shadow-xl"
         >
           <div
-            className={`w-12 h-12 rounded-full bg-blue-500 shadow-md transition-transform ${touchActive ? "scale-110" : ""}`}
+            className={`w-10 h-10 rounded-full bg-blue-500 shadow-md transition-transform ${
+              touchActive ? "scale-110" : ""
+            }`}
             style={{
               transform: `translate(${knobPos.x}px, ${knobPos.y}px)`,
             }}
@@ -918,16 +1672,35 @@ export default function PortfolioGame() {
         </div>
       </div>
 
-      {/* Zone Detail Modal Dialog */}
+      <div className="md:hidden absolute bottom-24 right-6 z-20 flex flex-col gap-2.5 touch-none select-none">
+        <button
+          onClick={handleMobileJump}
+          className="w-12 h-12 rounded-full bg-slate-900/80 text-white font-bold text-xs flex items-center justify-center border border-white/50 shadow-lg active:scale-95"
+        >
+          JUMP
+        </button>
+        <button
+          onClick={() => setIsMobileSprinting(!isMobileSprinting)}
+          className={`w-12 h-12 rounded-full font-bold text-[10px] flex items-center justify-center border shadow-lg active:scale-95 ${
+            isMobileSprinting
+              ? "bg-amber-500 text-slate-950 border-white"
+              : "bg-slate-900/80 text-white border-white/50"
+          }`}
+        >
+          RUN
+        </button>
+      </div>
+
+      {/* MODAL: PROJECT TERMINAL DETAILS (Official domains verified) */}
       {activeZone && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className="relative w-full max-w-lg bg-white rounded-3xl border border-slate-200 p-7 shadow-2xl space-y-6">
-            {/* Modal Header */}
+          <div className="relative w-full max-w-lg bg-white rounded-3xl border border-slate-200 p-6 sm:p-7 shadow-2xl space-y-6">
+            {/* Header */}
             <div className="flex items-start justify-between">
               <div>
                 <div className="flex items-center gap-2 mb-1.5">
                   <span
-                    className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-md text-white shadow-2xs"
+                    className="text-[10px] font-extrabold uppercase tracking-wider px-2.5 py-0.5 rounded-md text-white shadow-2xs"
                     style={{ backgroundColor: activeZone.hexColor }}
                   >
                     {activeZone.year} • {activeZone.category}
@@ -936,7 +1709,7 @@ export default function PortfolioGame() {
                     {activeZone.stats}
                   </span>
                 </div>
-                <h2 className="text-2xl font-extrabold text-slate-900">
+                <h2 className="text-2xl font-black text-slate-900">
                   {activeZone.title}
                 </h2>
                 <p className="text-xs font-semibold text-slate-500">
@@ -960,7 +1733,7 @@ export default function PortfolioGame() {
             {/* Tech Badges */}
             <div className="space-y-1.5">
               <div className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">
-                Stack Teknologi / Riset:
+                Stack Teknologi &amp; Riset:
               </div>
               <div className="flex flex-wrap gap-1.5">
                 {activeZone.tags.map((tag) => (
@@ -974,7 +1747,7 @@ export default function PortfolioGame() {
               </div>
             </div>
 
-            {/* Action Buttons */}
+            {/* Actions */}
             <div className="pt-2 flex flex-col sm:flex-row gap-3">
               {activeZone.liveUrl ? (
                 <a
@@ -985,14 +1758,14 @@ export default function PortfolioGame() {
                   style={{ backgroundColor: activeZone.hexColor }}
                 >
                   <span>
-                    Buka Website Resmi (
+                    Buka Domain Resmi (
                     {activeZone.liveUrl.replace("https://", "")})
                   </span>
                   <ExternalLink className="w-4 h-4" />
                 </a>
               ) : (
                 <div className="flex-1 px-4 py-3 rounded-xl text-xs font-medium bg-slate-50 border border-slate-200 text-slate-600 flex items-center justify-between min-h-[44px]">
-                  <span>Arsitektur Sistem &amp; Riset Internal</span>
+                  <span>Arsitektur Sistem Internal</span>
                   <CheckCircle className="w-4 h-4 text-emerald-600" />
                 </div>
               )}
@@ -1001,23 +1774,23 @@ export default function PortfolioGame() {
                 onClick={() => setActiveZone(null)}
                 className="px-5 py-3 rounded-xl font-semibold text-xs sm:text-sm text-slate-700 bg-slate-100 hover:bg-slate-200 transition-colors min-h-[44px] cursor-pointer"
               >
-                Lanjut Main
+                Lanjut Bermain
               </button>
             </div>
           </div>
         </div>
       )}
 
-      {/* Completion Banner when all zones visited */}
+      {/* ALL STATIONS VISITED BANNER */}
       {visitedZones.length === ZONES.length && !activeZone && (
-        <div className="absolute top-20 right-4 z-20 pointer-events-auto bg-gradient-to-r from-emerald-600 to-teal-600 text-white p-4 rounded-2xl shadow-xl max-w-xs space-y-1 animate-in slide-in-from-right duration-300">
+        <div className="absolute top-20 right-5 z-20 pointer-events-auto bg-gradient-to-r from-emerald-600 to-teal-600 text-white p-4 rounded-2xl shadow-xl max-w-xs space-y-1 animate-in slide-in-from-right duration-300">
           <div className="flex items-center gap-2 font-bold text-sm">
             <Trophy className="w-4 h-4 text-yellow-300" />
             <span>Misi Selesai 100%!</span>
           </div>
           <p className="text-xs text-emerald-100">
-            Hebat! Kamu telah menjelajahi seluruh ekosistem proyek dan
-            pencapaian Pranata Pramudya.
+            Hebat! Kamu bersama Bolt telah menjelajahi seluruh ekosistem proyek
+            dan pencapaian Pranata Pramudya.
           </p>
         </div>
       )}
