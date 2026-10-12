@@ -30,7 +30,7 @@ export default function Sidebar() {
       icon: <BriefcaseIcon className="w-5 h-5" />,
     },
     {
-      name: "Pencapaian",
+      name: "Pencapaian & Riwayat",
       href: "#achievements",
       icon: <AwardIcon className="w-5 h-5" />,
     },
@@ -46,7 +46,8 @@ export default function Sidebar() {
       {/* Mobile Toggle Button */}
       <button
         onClick={toggleSidebar}
-        className="lg:hidden fixed top-4 right-4 z-50 p-2.5 rounded-xl bg-slate-900/90 text-slate-200 border border-slate-700/80 backdrop-blur-md hover:bg-slate-800 transition-colors shadow-lg"
+        aria-label="Toggle Navigation"
+        className="lg:hidden fixed top-4 right-4 z-50 p-2.5 rounded-xl bg-white text-slate-800 border border-slate-200 shadow-md hover:bg-slate-50 transition-colors cursor-pointer min-h-[44px] min-w-[44px] flex items-center justify-center"
       >
         {isOpen ? (
           <XIcon className="w-6 h-6" />
@@ -58,29 +59,29 @@ export default function Sidebar() {
       {/* Overlay for mobile */}
       {isOpen && (
         <div
-          className="lg:hidden fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-40"
+          className="lg:hidden fixed inset-0 bg-slate-900/40 backdrop-blur-xs z-40 transition-opacity"
           onClick={closeSidebar}
         />
       )}
 
       {/* Sidebar */}
       <aside
-        className={`fixed top-0 left-0 h-screen w-64 bg-slate-950/95 backdrop-blur-xl border-r border-slate-800/80 z-40 transition-transform duration-300 ease-in-out ${
+        className={`fixed top-0 left-0 h-screen w-64 bg-white/95 backdrop-blur-xl border-r border-slate-200/90 z-40 transition-transform duration-300 ease-in-out ${
           isOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
         } flex flex-col`}
       >
         {/* Profile/Brand Area */}
-        <div className="p-6 border-b border-slate-800/80 text-center">
-          <div className="w-20 h-20 mx-auto rounded-2xl bg-gradient-to-tr from-cyan-500 via-blue-600 to-indigo-600 p-0.5 mb-3 shadow-[0_0_20px_rgba(34,211,238,0.25)]">
-            <div className="w-full h-full rounded-2xl bg-slate-900 flex items-center justify-center text-xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-400">
+        <div className="p-6 border-b border-slate-200/80 text-center">
+          <div className="w-20 h-20 mx-auto rounded-2xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-cyan-500 p-0.5 mb-3 shadow-md shadow-blue-500/15">
+            <div className="w-full h-full rounded-2xl bg-slate-50 flex items-center justify-center text-xl font-extrabold text-blue-600">
               PP
             </div>
           </div>
-          <h2 className="text-lg font-bold text-slate-100">Pranata Pramudya</h2>
-          <p className="text-xs text-cyan-400 font-medium mt-1">
-            Systems Architect & Full Stack
+          <h2 className="text-lg font-bold text-slate-900">Pranata Pramudya</h2>
+          <p className="text-xs text-blue-600 font-semibold mt-1">
+            Systems Architect &amp; Full Stack
           </p>
-          <span className="inline-block mt-2 px-2.5 py-0.5 rounded-full text-[10px] font-semibold tracking-wide uppercase bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
+          <span className="inline-block mt-2 px-2.5 py-0.5 rounded-full text-[10px] font-semibold tracking-wide uppercase bg-emerald-50 text-emerald-700 border border-emerald-200">
             Open for Roles
           </span>
         </div>
@@ -92,12 +93,12 @@ export default function Sidebar() {
               key={link.name}
               href={link.href}
               onClick={closeSidebar}
-              className="flex items-center gap-3.5 px-4 py-3 rounded-xl text-slate-300 hover:text-cyan-400 hover:bg-slate-900/90 transition-all duration-200 group border border-transparent hover:border-cyan-500/30 hover:shadow-sm"
+              className="flex items-center gap-3.5 px-4 py-3 rounded-xl text-slate-600 hover:text-blue-600 hover:bg-blue-50/70 transition-all duration-200 group border border-transparent hover:border-blue-200/60 min-h-[44px]"
             >
-              <div className="text-slate-400 group-hover:text-cyan-400 group-hover:scale-110 transition-transform">
+              <div className="text-slate-400 group-hover:text-blue-600 group-hover:scale-110 transition-transform">
                 {link.icon}
               </div>
-              <span className="text-sm font-medium group-hover:translate-x-0.5 transition-transform">
+              <span className="text-sm font-semibold group-hover:translate-x-0.5 transition-transform">
                 {link.name}
               </span>
             </a>
@@ -105,9 +106,9 @@ export default function Sidebar() {
         </nav>
 
         {/* Footer Area */}
-        <div className="p-4 border-t border-slate-800/80 text-center">
-          <p className="text-[11px] text-slate-500">
-            &copy; 2026 Pranata Pramudya. S.Kom.
+        <div className="p-4 border-t border-slate-200/80 text-center bg-slate-50/50">
+          <p className="text-[11px] text-slate-500 font-medium">
+            &copy; 2026 Pranata Pramudya, S.Kom.
           </p>
         </div>
       </aside>
